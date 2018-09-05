@@ -62,8 +62,7 @@ def place_mark(player, coordinates):
   if board[row][column] == EMPTY:
     board[row][column] = MARKS[player]
   else:
-    print("That's spot is already taken.")
-    place_mark(player)
+    prompt_action(player, prompt="That spot is already taken. Try again: ")
 
 def prompt_action(player, prompt=''):
   action = input(prompt)
