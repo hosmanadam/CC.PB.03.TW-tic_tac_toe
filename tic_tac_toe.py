@@ -1,5 +1,6 @@
 from sys import exit
 from termcolor import colored
+import pickle
 
 
 def did_player_win(player):
@@ -55,7 +56,7 @@ def get_to_win(prompt="How many marks in a row (from 3-5) to win? "):
     return get_to_win(prompt="Winning size has to be between 3 and 5. Try again: ")
   return to_win
 
-def place_mark(player):
+def place_mark(player, prompt=''):
   coordinates = input(f"{players[player]}, enter your coordinates (e.g. a1, c2): ")
   # ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓
   if coordinates[0].lower() == 's':
@@ -108,7 +109,6 @@ def print_board():
 
 
 # ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓
-import pickle
 def save():
     save = players, board, scores, board_size, to_win
     with open("save.pickle", "wb") as file:
@@ -119,8 +119,10 @@ def save():
 print(100*'\n')
 
 COLUMNS = 'ABCDEFGHI'
-MARKS = 'XO'
-EMPTY = ' '
+COLORS = ['red', 'green']
+# MARKS = 'XO'
+MARKS = [colored('X', COLORS[0]), colored('O', COLORS[1])]
+EMPTY = '←'
 board_size = get_board_size()
 to_win = get_to_win()
 players = get_player_names()
