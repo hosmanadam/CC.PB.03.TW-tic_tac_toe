@@ -46,8 +46,14 @@ def get_board_size(prompt="What size board (from 3-9) would you like to play on?
 def get_player_names():
   return [input("Enter Player 1 name: "), input("Enter Player 2 name: ")]
 
-def get_to_win():
-  return int(input("How many marks in a row to win? "))
+def get_to_win(prompt="How many marks in a row (from 3-5) to win? "):
+  try:
+    to_win = int(input(prompt))
+  except:
+    return get_to_win(prompt="You have to enter a natural number between 3 and 5. Try again: ")
+  if to_win not in range(3, 6):
+    return get_to_win(prompt="Winning size has to be between 3 and 5. Try again: ")
+  return to_win
 
 def placement(player):
   coordinates = input(f"{players[player]}, enter your coordinates (e.g. a1, c2): ")
