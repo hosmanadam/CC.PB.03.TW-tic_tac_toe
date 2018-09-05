@@ -2,10 +2,14 @@ def generate_board():
   """Short version"""
   return ([[EMPTY]*board_size for i in range(board_size)])
 
-def print_board():
-  print(100*'\n')
-  for row in board:
-    print(row)
+# ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓
+
+from termcolor import colored
+
+# def print_board():
+#   print(100*'\n')
+#   for row in board:
+#     print(row)
 
 # def print_board():
 #   print(100*'\n')
@@ -13,6 +17,36 @@ def print_board():
 #     for char in row:
 #       print(char, end='')
 #     print('')
+
+def print_board():
+  def print_column_headers():
+    print('  ', end='')
+    for i in range(board_size):
+      print(COLUMNS[i] + ' ', end='')
+    print(' ')
+
+  def print_column_footers():
+    print('  ', end='')
+    for i in range(board_size):
+      print('↑ ', end='')
+    print(' ')
+
+  def print_rows():
+    for i in range(board_size):
+      print(str(i+1) + ' ', end='')
+      for place in board[i]:
+        print(colored(place, attrs=['bold']) + ' ', end='')
+      print(str(i+1)) # A
+      # print('←') # B
+
+  print(100*'\n')
+  print_column_headers()
+  print_rows()
+  print_column_headers() # A
+  # print_column_footers() # B
+
+# ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑
+
     
 def placement(player):
   coordinates = input(f"{players[player]}, enter your coordinates (e.g. a1, c2): ")
