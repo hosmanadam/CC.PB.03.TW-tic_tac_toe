@@ -1,3 +1,5 @@
+# comment
+
 def generate_board():
   """Short version"""
   return ([[EMPTY]*board_size for i in range(board_size)])
