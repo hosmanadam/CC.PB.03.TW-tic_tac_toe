@@ -69,9 +69,9 @@ def prompt_action(player, prompt=''):
   action = input(prompt)
   if action[0].lower() == 's':
     save()
-    exit()
+    quit()
   if action[0].lower() == 'q':
-    exit()
+    quit()
   place_mark(player, action)
   # ADD SAME ERROR HANDLING
 
@@ -117,6 +117,9 @@ def save():
       pickle.dump(save, file)
 # ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑
 
+def quit():
+  print(GOODBYE)
+  exit()
 
 print(100*'\n')
 
@@ -125,6 +128,8 @@ COLORS = ['red', 'green']
 # MARKS = 'XO'
 MARKS = [colored('X', COLORS[0]), colored('O', COLORS[1])]
 EMPTY = ' '
+HELLO = 'Hello!'
+GOODBYE = 'Goodbye!'
 INSTRUCTIONS = ("Enter your coordinates (e.g. a1, c2), OR"
                 "[s] save game and exit\n"
                 "[q] exit without saving")
@@ -137,6 +142,7 @@ scores = [0, 0]
 wants_to_play = True
 
 
+print(HELLO)
 while wants_to_play:
   board = generate_board()
   print_board()
@@ -155,3 +161,4 @@ while wants_to_play:
         if input("Would you like to play again? (y/n) ").lower()[0] == "n":
           wants_to_play = False
         break
+quit()
