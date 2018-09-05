@@ -91,6 +91,11 @@ def did_player_win(player):
 def get_player_names():
   return [input("Enter Player 1 name: "), input("Enter Player 2 name: ")]
 
+import pickle
+def save():
+    save = players, board, scores, board_size, to_win
+    with open("save.pickle", "wb") as file:
+      pickle.dump(save, file)
 
 print(100*'\n')
 COLUMNS = 'ABCDEFGHIJ'
@@ -120,4 +125,3 @@ while wants_to_play:
         if input("Would you like to play again? (y/n) ").lower()[0] == "n":
           wants_to_play = False
         break
-      
