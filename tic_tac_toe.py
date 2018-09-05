@@ -55,7 +55,7 @@ def get_to_win(prompt="How many marks in a row (from 3-5) to win? "):
     return get_to_win(prompt="Winning size has to be between 3 and 5. Try again: ")
   return to_win
 
-def placement(player):
+def place_mark(player):
   coordinates = input(f"{players[player]}, enter your coordinates (e.g. a1, c2): ")
   # ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓
   if coordinates[0].lower() == 's':
@@ -70,7 +70,7 @@ def placement(player):
     board[row][column] = MARKS[player]
   else:
     print("That's spot is already taken.")
-    placement(player)
+    place_mark(player)
 
 # def print_board():
 #   """v0: For testing purposes"""
@@ -136,7 +136,7 @@ while wants_to_play:
   winner = None
   while not winner:
     for player in range(2):      
-      placement(player)
+      place_mark(player)
       print_board()
       if did_player_win(player):
         print(f"{players[player]} wins!")
