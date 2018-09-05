@@ -108,7 +108,7 @@ def print_scores():
 
 # ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓
 def save():
-    save = players, board, scores, board_size, to_win
+    save = board_size, to_win, players, board, steps, scores
     with open("save.pickle", "wb") as file:
       pickle.dump(save, file)
     print("\nGame has been saved.", end='')
@@ -138,12 +138,14 @@ to_win = get_to_win()
 players = get_player_names()
 
 board = []
+steps = []
 scores = [0, 0]
 wants_to_play = True
 
 
 while wants_to_play:
   board = generate_board()
+  steps = [0, 0]
   winner = None
   while not winner:
     for player in range(2):  
@@ -155,10 +157,12 @@ while wants_to_play:
       print(colored(f"\n{players[player]}", COLORS[player], attrs=['bold']) +
                      ", make your move: ", end='')
       prompt_action(player)
+      steps[player] += 1
       if did_player_win(player):
         print("\n"*100)
         print_board()
-        print(colored(f"\n{players[player]} wins!", COLORS[player], attrs=['bold']))
+        print(colored(f"\n{players[player]} wins in {steps[player]} steps!",
+                      COLORS[player], attrs=['bold']))
         winner = players[player]
         scores[player] += 1
         if sum(scores) > 1:
