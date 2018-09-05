@@ -56,15 +56,7 @@ def get_to_win(prompt="How many marks in a row (from 3-5) to win? "):
     return get_to_win(prompt="Winning size has to be between 3 and 5. Try again: ")
   return to_win
 
-def place_mark(player, prompt=''):
-  coordinates = input(f"{players[player]}, enter your coordinates (e.g. a1, c2): ")
-  # ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓
-  if coordinates[0].lower() == 's':
-    save()
-    exit()
-  if coordinates[0].lower() == 'q':
-    exit()
-  # ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑
+def place_mark(player, coordinates):
   row = int(coordinates[1:])-1
   column = COLUMNS.index(coordinates[0].upper())
   if board[row][column] == EMPTY:
@@ -72,6 +64,16 @@ def place_mark(player, prompt=''):
   else:
     print("That's spot is already taken.")
     place_mark(player)
+
+def prompt_action(player, prompt=''):
+  action = input(prompt)
+  if action[0].lower() == 's':
+    save()
+    exit()
+  if action[0].lower() == 'q':
+    exit()
+  place_mark(player, action)
+  # ADD SAME ERROR HANDLING
 
 # def print_board():
 #   """v0: For testing purposes"""
@@ -122,7 +124,10 @@ COLUMNS = 'ABCDEFGHI'
 COLORS = ['red', 'green']
 # MARKS = 'XO'
 MARKS = [colored('X', COLORS[0]), colored('O', COLORS[1])]
-EMPTY = '←'
+EMPTY = ' '
+INSTRUCTIONS = ("Enter your coordinates (e.g. a1, c2), OR"
+                "[s] save game and exit\n"
+                "[q] exit without saving")
 board_size = get_board_size()
 to_win = get_to_win()
 players = get_player_names()
@@ -138,7 +143,9 @@ while wants_to_play:
   winner = None
   while not winner:
     for player in range(2):      
-      place_mark(player)
+      # place_mark(player)
+      print(f"{players[player]}'s turn: ", end='')
+      prompt_action(player)
       print_board()
       if did_player_win(player):
         print(f"{players[player]} wins!")
