@@ -1,5 +1,4 @@
 def generate_board():
-  """Short version"""
   return ([[EMPTY]*board_size for i in range(board_size)])
 
 # ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓
@@ -91,11 +90,16 @@ def did_player_win(player):
 def get_player_names():
   return [input("Enter Player 1 name: "), input("Enter Player 2 name: ")]
 
+
+# ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓
+
 import pickle
 def save():
     save = players, board, scores, board_size, to_win
     with open("save.pickle", "wb") as file:
       pickle.dump(save, file)
+
+# ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑
 
 print(100*'\n')
 COLUMNS = 'ABCDEFGHIJ'
