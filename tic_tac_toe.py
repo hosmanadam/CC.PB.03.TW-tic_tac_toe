@@ -35,7 +35,13 @@ def generate_board():
 
 def get_board_size(prompt="What size board (from 3-9) would you like to play on? "):
   """Determines actual playing area without headers, spacing, etc."""
-  return int(input(prompt))
+  try:
+    board_size = int(input(prompt))
+  except:
+    return get_board_size(prompt="You have to enter a natural number between 3 and 9. Try again: ")
+  if board_size not in range(3, 10):
+    return get_board_size(prompt="Board size has to be between 3 and 9. Try again: ")
+  return board_size
 
 def get_player_names():
   return [input("Enter Player 1 name: "), input("Enter Player 2 name: ")]
