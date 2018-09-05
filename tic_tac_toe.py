@@ -45,7 +45,7 @@ def get_board_size(prompt="What size board (from 3-9) would you like to play on?
   return board_size
 
 def get_player_names():
-  return [input("Enter Player 1 name: "), input("Enter Player 2 name: ")]
+  return [input("\nEnter Player 1 name: "), input("Enter Player 2 name: ")]
 
 def get_to_win(prompt="How many marks in a row (from 3-5) to win? "):
   try:
@@ -88,32 +88,30 @@ def print_board():
       print(COLUMNS[i] + ' ', end='')
     print(' ')
 
-  def print_column_footers():
-    print('  ', end='')
-    for i in range(board_size):
-      print('↑ ', end='')
-    print(' ')
-
   def print_rows():
     for i in range(board_size):
       print(str(i+1) + ' ', end='')
       for place in board[i]:
         print(colored(place, attrs=['bold']) + ' ', end='')
-      print(str(i+1)) # A
-      # print('←') # B
+      print(str(i+1))
 
-  print(100*'\n')
   print_column_headers()
   print_rows()
-  print_column_headers() # A
-  # print_column_footers() # B
+  print_column_headers()
 
+def print_scores():
+  print("Current score: " +
+       f"{players[0]}: " +
+       colored(f"{scores[0]}", COLORS[0]) +
+       f" - {players[1]}: " +
+       colored(f"{scores[1]}\n", COLORS[1]))
 
 # ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓
 def save():
     save = players, board, scores, board_size, to_win
     with open("save.pickle", "wb") as file:
       pickle.dump(save, file)
+    print("\nGame has been saved.", end='')
 # ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑
 
 def quit():
@@ -124,14 +122,17 @@ print(100*'\n')
 
 COLUMNS = 'ABCDEFGHI'
 COLORS = ['red', 'green']
-# MARKS = 'XO'
 MARKS = [colored('X', COLORS[0]), colored('O', COLORS[1])]
 EMPTY = ' '
-HELLO = 'Hello!'
-GOODBYE = 'Goodbye!'
-INSTRUCTIONS = ("Enter your coordinates (e.g. a1, c2), OR"
-                "[s] save game and exit\n"
-                "[q] exit without saving")
+HELLO = ("*** Hello and welcome to " + colored("Tic-tac-toe ", attrs=['bold']) +
+        "by " + colored("2heads", 'blue', attrs=['bold']) + "! ***\n")
+GOODBYE = "\n*** Thanks for playing. " + colored("Goodbye!", attrs=['bold']) + " ***\n"
+INSTRUCTIONS = ("Save game and exit: 's'\n"
+                "Exit without saving: 'q'\n" +
+                colored("Place mark by entering its coordinates (e.g. 'a1', 'c2'):", attrs=['bold']) +
+                "\n")
+
+print(HELLO)
 board_size = get_board_size()
 to_win = get_to_win()
 players = get_player_names()
@@ -141,23 +142,28 @@ scores = [0, 0]
 wants_to_play = True
 
 
-print(HELLO)
 while wants_to_play:
   board = generate_board()
-  print_board()
   winner = None
   while not winner:
-    for player in range(2):      
-      # place_mark(player)
-      print(f"{players[player]}'s turn: ", end='')
-      prompt_action(player)
+    for player in range(2):  
+      print("\n"*100)
+      if sum(scores) > 0:
+        print_scores()
+      print(INSTRUCTIONS)
       print_board()
+      print(colored(f"\n{players[player]}", COLORS[player], attrs=['bold']) +
+                     ", make your move: ", end='')
+      prompt_action(player)
       if did_player_win(player):
-        print(f"{players[player]} wins!")
+        print("\n"*100)
+        print_board()
+        print(colored(f"\n{players[player]} wins!", COLORS[player], attrs=['bold']))
         winner = players[player]
         scores[player] += 1
-        print(scores)
-        if input("Would you like to play again? (y/n) ").lower()[0] == "n":
+        if sum(scores) > 1:
+          print_scores()
+        if input(colored("Would you like to play again?", attrs=['bold']) + " (y/n) ").lower()[0] == "n":
           wants_to_play = False
         break
 quit()
