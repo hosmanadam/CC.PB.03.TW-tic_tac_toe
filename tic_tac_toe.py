@@ -100,11 +100,10 @@ def print_board():
   print_column_headers()
 
 def print_scores():
-  print("Current score: " +
-       f"{players[0]}: " +
-       colored(f"{scores[0]}", COLORS[0]) +
-       f" - {players[1]}: " +
-       colored(f"{scores[1]}\n", COLORS[1]))
+  print(f"{players[0]}: " +
+        colored(f"{scores[0]}", COLORS[0]) +
+        f" - {players[1]}: " +
+        colored(f"{scores[1]}\n", COLORS[1]))
 
 # ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓
 def save():
