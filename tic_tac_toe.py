@@ -1,4 +1,5 @@
 from sys import exit
+from os import remove
 from termcolor import colored
 import pickle
 
@@ -75,18 +76,17 @@ def place_mark(player, coordinates):
 def prompt_action(player, prompt=''):
   try:
     action = input(prompt)
-    if action[0].lower() == 's':
-      save()
+    if action.lower() == 's':
+      game_save()
       quit()
-    if action[0].lower() == 'q':
+    if action.lower() == 'q':
       quit()
     place_mark(player, action)
   except IndexError: 
-    prompt_action(player, prompt="Board is too small for that. Try again: ")
+    prompt_action(player, prompt="No such place on this board. Try again: ")
   except ValueError: 
     prompt_action(player, prompt="Incorrectly formatted coordinates. "
                                  "Try again: ")
-  # ADD SAME ERROR HANDLING
 
 # def print_board():
 #   """v0: For testing purposes"""
@@ -119,24 +119,29 @@ def print_scores():
         f" - {players[1]}: " +
         colored(f"{scores[1]}\n", COLORS[1]))
 
-def save():
-    save = board_size, to_win, players, board, steps, scores
-    with open("save.pickle", "wb") as file:
-      pickle.dump(save, file)
-    print("\nGame has been saved.", end='')
-
 # ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓
-def load():
-  pass
-  # delete save.pickle here
+def game_save():
+  with open("saved.pickle", "wb") as file:
+    pickle.dump((board_size, to_win, players, scores, board, steps), file)
+  print("\nGame has been saved.", end='')
+
+def game_load():
+  with open("saved.pickle", "rb") as file:
+    payload = pickle.load(file)
+  remove("saved.pickle")
+  return payload
+
+def game_new():
+  return get_board_size(), get_to_win(), get_player_names(), [0, 0]
+  scores = [0, 0]
 # ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑
 
 def quit():
   print(GOODBYE)
   exit()
 
-print(100*'\n')
 
+# Create constants
 COLUMNS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ' # Included whole ABC for error handling
 COLORS = ['red', 'green']
 MARKS = [colored('X', COLORS[0]), colored('O', COLORS[1])]
@@ -149,26 +154,34 @@ INSTRUCTIONS = ("Save game and exit: 's'\n"
                 "Exit without saving: 'q'\n" +
                 colored("Place mark by entering its coordinates "
                         "(e.g. 'a1', 'c2'):\n", attrs=['bold']))
+# Create game variables
+board_size = None
+to_win = None
+players = []
+scores = []
+# Create round variables
+board = []
+steps = []
+
 
 try:
-  print(HELLO)
-  board_size = get_board_size()
-  to_win = get_to_win()
-  players = get_player_names()
-
-  board = []
-  steps = []
-  scores = [0, 0]
+  print('\n'*100 + HELLO)
+  try:
+    board_size, to_win, players, scores, board, steps = game_load()
+    from_load = True # HACK
+  except FileNotFoundError:
+    board_size, to_win, players, scores = game_new()
+    from_load = False # HACK
   wants_to_play = True
-
-
   while wants_to_play:
-    board = generate_board()
-    steps = [0, 0]
+    if not from_load:
+      board = generate_board()
+      steps = [0, 0]
+    from_load = False # HACK
     winner = None
     while not winner:
       for player in range(2):  
-        print("\n"*100)
+        print('\n'*100)
         if sum(scores) > 0:
           print_scores()
         print(INSTRUCTIONS)
