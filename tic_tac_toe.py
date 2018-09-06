@@ -28,20 +28,24 @@ def did_player_win(player):
   for shape in shapes.values():
     for y in range(*shape["range_y"]):
       for x in range(*shape["range_x"]):
-        if [board[y + shape["step_y"]*i][x + shape["step_x"]*i] for i in range(to_win)] == [MARKS[player]]*to_win:
+        if ([board[y + shape["step_y"]*i][x + shape["step_x"]*i]
+            for i in range(to_win)] == [MARKS[player]]*to_win):
           return True
 
 def generate_board():
   return ([[EMPTY]*board_size for i in range(board_size)])
 
-def get_board_size(prompt="What size board (from 3-9) would you like to play on? "):
+def get_board_size(prompt="What size board (from 3-9) "
+                          "would you like to play on? "):
   """Determines actual playing area without headers, spacing, etc."""
   try:
     board_size = int(input(prompt))
   except ValueError:
-    return get_board_size(prompt="You have to enter a natural number between 3 and 9. Try again: ")
+    return get_board_size(prompt="You have to enter a natural number between "
+                                 "3 and 9. Try again: ")
   if board_size not in range(3, 10):
-    return get_board_size(prompt="Board size has to be between 3 and 9. Try again: ")
+    return get_board_size(prompt="Board size has to be between 3 and 9. "
+                                 "Try again: ")
   return board_size
 
 def get_player_names():
@@ -51,9 +55,11 @@ def get_to_win(prompt="How many marks in a row (from 3-5) to win? "):
   try:
     to_win = int(input(prompt))
   except ValueError:
-    return get_to_win(prompt="You have to enter a natural number between 3 and 5. Try again: ")
+    return get_to_win(prompt="You have to enter a natural number between "
+                             "3 and 5. Try again: ")
   if to_win not in range(3, 6):
-    return get_to_win(prompt="Winning size has to be between 3 and 5. Try again: ")
+    return get_to_win(prompt="Winning size has to be between 3 and 5. "
+                             "Try again: ")
   return to_win
 
 def place_mark(player, coordinates):
@@ -78,7 +84,8 @@ def prompt_action(player, prompt=''):
   except IndexError: 
     prompt_action(player, prompt="Board is too small for that. Try again: ")
   except ValueError: 
-    prompt_action(player, prompt="Incorrectly formatted coordinates. Try again: ")
+    prompt_action(player, prompt="Incorrectly formatted coordinates. "
+                                 "Try again: ")
   # ADD SAME ERROR HANDLING
 
 # def print_board():
@@ -134,13 +141,14 @@ COLUMNS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ' # Included whole ABC for error handling
 COLORS = ['red', 'green']
 MARKS = [colored('X', COLORS[0]), colored('O', COLORS[1])]
 EMPTY = ' '
-HELLO = ("*** Hello and welcome to " + colored("Tic-tac-toe ", attrs=['bold']) +
-        "by " + colored("2heads", 'blue', attrs=['bold']) + "! ***\n")
-GOODBYE = "\n*** Thanks for playing. " + colored("Goodbye!", attrs=['bold']) + " ***\n"
+HELLO = ("*** Hello and welcome to " + colored("Tic-tac-toe ", attrs=['bold'])
+         + "by " + colored("2heads", 'blue', attrs=['bold']) + "! ***\n")
+GOODBYE = ("\n*** Thanks for playing. " + colored("Goodbye!", attrs=['bold']) +
+           " ***\n")
 INSTRUCTIONS = ("Save game and exit: 's'\n"
                 "Exit without saving: 'q'\n" +
-                colored("Place mark by entering its coordinates (e.g. 'a1', 'c2'):", attrs=['bold']) +
-                "\n")
+                colored("Place mark by entering its coordinates "
+                        "(e.g. 'a1', 'c2'):\n", attrs=['bold']))
 
 try:
   print(HELLO)
@@ -178,7 +186,8 @@ try:
           scores[player] += 1
           if sum(scores) > 1:
             print_scores()
-          if input(colored("Would you like to play again?", attrs=['bold']) + " (y/n) ").lower()[0] == "n":
+          if input(colored("Would you like to play again?", attrs=['bold']) + 
+                   " (y/n) ").lower()[0] == "n":
             wants_to_play = False
           break
   quit()
