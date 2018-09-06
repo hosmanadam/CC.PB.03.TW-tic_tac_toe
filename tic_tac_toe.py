@@ -135,42 +135,45 @@ INSTRUCTIONS = ("Save game and exit: 's'\n"
                 colored("Place mark by entering its coordinates (e.g. 'a1', 'c2'):", attrs=['bold']) +
                 "\n")
 
-print(HELLO)
-board_size = get_board_size()
-to_win = get_to_win()
-players = get_player_names()
+try:
+  print(HELLO)
+  board_size = get_board_size()
+  to_win = get_to_win()
+  players = get_player_names()
 
-board = []
-steps = []
-scores = [0, 0]
-wants_to_play = True
+  board = []
+  steps = []
+  scores = [0, 0]
+  wants_to_play = True
 
 
-while wants_to_play:
-  board = generate_board()
-  steps = [0, 0]
-  winner = None
-  while not winner:
-    for player in range(2):  
-      print("\n"*100)
-      if sum(scores) > 0:
-        print_scores()
-      print(INSTRUCTIONS)
-      print_board()
-      print(colored(f"\n{players[player]}", COLORS[player], attrs=['bold']) +
-                     ", make your move: ", end='')
-      prompt_action(player)
-      steps[player] += 1
-      if did_player_win(player):
+  while wants_to_play:
+    board = generate_board()
+    steps = [0, 0]
+    winner = None
+    while not winner:
+      for player in range(2):  
         print("\n"*100)
-        print_board()
-        print(colored(f"\n{players[player]} wins in {steps[player]} steps!",
-                      COLORS[player], attrs=['bold']))
-        winner = players[player]
-        scores[player] += 1
-        if sum(scores) > 1:
+        if sum(scores) > 0:
           print_scores()
-        if input(colored("Would you like to play again?", attrs=['bold']) + " (y/n) ").lower()[0] == "n":
-          wants_to_play = False
-        break
-quit()
+        print(INSTRUCTIONS)
+        print_board()
+        print(colored(f"\n{players[player]}", COLORS[player], attrs=['bold']) +
+                       ", make your move: ", end='')
+        prompt_action(player)
+        steps[player] += 1
+        if did_player_win(player):
+          print("\n"*100)
+          print_board()
+          print(colored(f"\n{players[player]} wins in {steps[player]} steps!",
+                        COLORS[player], attrs=['bold']))
+          winner = players[player]
+          scores[player] += 1
+          if sum(scores) > 1:
+            print_scores()
+          if input(colored("Would you like to play again?", attrs=['bold']) + " (y/n) ").lower()[0] == "n":
+            wants_to_play = False
+          break
+  quit()
+except KeyboardInterrupt:
+  quit()
