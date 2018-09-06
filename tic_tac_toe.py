@@ -106,12 +106,7 @@ def prompt_action(player, prompt=''):
     prompt_action(player, prompt="Incorrectly formatted coordinates. "
                                  "Try again: ")
 
-# def print_board():
-#   """v0: For testing purposes"""
-#   for row in board:
-#     print(row)
-
-def print_board():
+def print_board(last_player):
   """v1: Minimalistic version without grid, with bold marks"""
   def print_column_headers():
     print('  ', end='')
@@ -119,15 +114,21 @@ def print_board():
       print(COLUMNS[i] + ' ', end='')
     print(' ')
 
-  def print_rows():
-    for i in range(board_size):
-      print(str(i+1) + ' ', end='')
-      for place in board[i]:
-        print(colored(place, attrs=['bold']) + ' ', end='')
-      print(str(i+1))
+  def print_rows(last_player):
+    for row in range(board_size):
+      print(str(row+1) + ' ', end='')
+      for place in range(len(board[row])):
+        # if winner in (0, 1) and ...:
+        #   print("Somebody's won!")
+        if steps[last_player] and (place, row) == steps[last_player][-1]: # NEEDS PLAYER + ELIF + NOT FIRST OCCURENCE OF VALUE
+          print(colored(board[row][place], attrs=['bold']) + 
+                colored('←', 'blue', attrs=['bold']), end='')
+        else:
+          print(colored(board[row][place], attrs=['bold']) + ' ', end='')
+      print(str(row+1))
 
   print_column_headers()
-  print_rows()
+  print_rows(last_player)
   print_column_headers()
 
 def print_scores():
@@ -200,7 +201,7 @@ try:
       board = generate_board() # HACK1
       steps = [[], []]         # HACK1
     winner = None
-    while not winner:
+    while winner == None:
       for player in range(2):  
         if not from_load: # HACK1
           system('clear') # HACK1
@@ -209,18 +210,19 @@ try:
           continue # Makes loaded game start with next player
         print_scores(); print('')
         print(INSTRUCTIONS)
-        print(steps) # TEST
-        print_board()
+        # print(steps) # TEST
+        last_player = [x for x in (0, 1) if x != player][0]
+        print_board(last_player)
         print(colored(f"\n{players[player]}", COLORS[player], attrs=['bold']) +
                        ", make your move: ", end='')
         prompt_action(player)
         if did_player_win(player):
+          winner = player
           system('clear')
           print('\n'*5)
-          print_board()
+          print_board(last_player)
           print(colored(f"\n{players[player]} wins in {len(steps[player])} "
                          "steps!", COLORS[player], attrs=['bold'])); sleep(WAIT)
-          winner = players[player]
           scores[player] += 1
           print_scores(); sleep(WAIT)
           if not wants_rematch():
