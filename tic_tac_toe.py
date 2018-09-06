@@ -1,6 +1,7 @@
-from sys import exit
 from os import remove, system
+from sys import exit
 from termcolor import colored
+from time import sleep
 import pickle
 
 
@@ -40,18 +41,18 @@ def game_load():
   return payload
 
 def game_new():
-  return get_board_size(), get_to_win(), get_player_names(), [0, 0]
-  scores = [0, 0]
+  payload = get_board_size(), get_to_win(), get_player_names(), [0, 0]
+  return payload
 
 def game_save():
   with open("saved.pickle", "wb") as file:
     pickle.dump((board_size, to_win, players, scores, board, steps), file)
-  print("\nGame has been saved.", end='')
+  print("Game has been saved.")
 
 def generate_board():
   return ([[EMPTY]*board_size for i in range(board_size)])
 
-def get_board_size(prompt="What size board (from 3-9) "
+def get_board_size(prompt="\nWhat size board (from 3-9) "
                           "would you like to play on? "):
   """Determines actual playing area without headers, spacing, etc."""
   try:
@@ -92,13 +93,13 @@ def prompt_action(player, prompt=''):
   try:
     action = input(prompt)
     if action.lower() == 's':
-      game_save()
+      game_save(); sleep(WAIT/2)
       quit()
     if action.lower() == 'q':
       quit()
     place_mark(player, action)
   except IndexError: 
-    prompt_action(player, prompt="No such place on this board. Try again: ")
+    prompt_action(player, prompt="Coordinates out of range. Try again: ")
   except ValueError: 
     prompt_action(player, prompt="Incorrectly formatted coordinates. "
                                  "Try again: ")
@@ -131,10 +132,23 @@ def print_scores():
   print(f"{players[0]}: " +
         colored(f"{scores[0]}", COLORS[0]) +
         f" - {players[1]}: " +
-        colored(f"{scores[1]}\n", COLORS[1]))
+        colored(f"{scores[1]}", COLORS[1]))
+
+def wants_rematch(prompt=colored("\nWould you like to play another round?",
+                                 attrs=['bold']) + " (y/n) "):
+  intention = input(prompt)
+  try:
+    if intention.lower()[0] == "n":
+      return False
+    if intention.lower()[0] == "y":
+      return True
+  except IndexError:
+    return wants_rematch(prompt="Type something please: ")
+  return wants_rematch(prompt="Say again? ")
 
 def quit():
-  print(GOODBYE)
+  print(GOODBYE); sleep(WAIT)
+  system('clear')
   exit()
 
 
@@ -143,13 +157,14 @@ COLUMNS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ' # Included whole ABC for error handling
 COLORS = ['red', 'green']
 MARKS = [colored('X', COLORS[0]), colored('O', COLORS[1])]
 EMPTY = ' '
+WAIT = 1.5
 WELCOME = ("*** Hello and welcome to " + colored("Tic-tac-toe ", attrs=['bold'])
-         + "by " + colored("2heads", 'blue', attrs=['bold']) + "! ***\n")
-WELCOME_BACK = ("*** Welcome back to " + colored("Tic-tac-toe ", attrs=['bold'])
-              + "by " + colored("2heads", 'blue', attrs=['bold']) + "! ***\n"
-                "\nContinuing from where you left off last time...\n")
+         + "by " + colored("2heads", 'blue', attrs=['bold']) + "! ***")
+WELCOME_BACK = ["*** Welcome back to " + colored("Tic-tac-toe ", attrs=['bold'])
+              + "by " + colored("2heads", 'blue', attrs=['bold']) + "! ***",
+                "Continuing from where you left off..."]
 GOODBYE = ("\n*** Thanks for playing. " + colored("Goodbye!", attrs=['bold']) +
-           " ***\n")
+           " ***")
 INSTRUCTIONS = ("Save game and exit: 's'\n"
                 "Exit without saving: 'q'\n" +
                 colored("Place mark by entering its coordinates "
@@ -168,11 +183,14 @@ try:
   system('clear')
   try:
     board_size, to_win, players, scores, board, steps = game_load()
-    print(WELCOME_BACK)
+    print(WELCOME_BACK[0]); sleep(WAIT)
+    print(WELCOME_BACK[1]); sleep(WAIT)
+    system('clear')
     from_load = True # HACK
   except FileNotFoundError:
-    print(WELCOME)
+    print(WELCOME); sleep(WAIT)
     board_size, to_win, players, scores = game_new()
+    print("\nLet's begin..."); sleep(WAIT)
     from_load = False # HACK
   wants_to_play = True
   while wants_to_play:
@@ -185,8 +203,7 @@ try:
         if not from_load:
           system('clear')
         from_load = False # HACK
-        if sum(scores) > 0:
-          print_scores()
+        print_scores(); print('')
         print(INSTRUCTIONS)
         print_board()
         print(colored(f"\n{players[player]}", COLORS[player], attrs=['bold']) +
@@ -195,16 +212,14 @@ try:
         steps[player] += 1
         if did_player_win(player):
           system('clear')
-          print('\n'*3)
+          print('\n'*5)
           print_board()
           print(colored(f"\n{players[player]} wins in {steps[player]} steps!",
-                        COLORS[player], attrs=['bold']))
+                        COLORS[player], attrs=['bold'])); sleep(WAIT)
           winner = players[player]
           scores[player] += 1
-          if sum(scores) > 1:
-            print_scores()
-          if input(colored("Would you like to play another round?",
-                           attrs=['bold']) + " (y/n) ").lower()[0] == "n":
+          print_scores(); sleep(WAIT)
+          if not wants_rematch():
             wants_to_play = False
           break
   quit()
