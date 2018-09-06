@@ -1,5 +1,5 @@
 from sys import exit
-from os import remove
+from os import remove, system
 from termcolor import colored
 import pickle
 
@@ -32,6 +32,21 @@ def did_player_win(player):
         if ([board[y + shape["step_y"]*i][x + shape["step_x"]*i]
             for i in range(to_win)] == [MARKS[player]]*to_win):
           return True
+
+def game_load():
+  with open("saved.pickle", "rb") as file:
+    payload = pickle.load(file)
+  remove("saved.pickle")
+  return payload
+
+def game_new():
+  return get_board_size(), get_to_win(), get_player_names(), [0, 0]
+  scores = [0, 0]
+
+def game_save():
+  with open("saved.pickle", "wb") as file:
+    pickle.dump((board_size, to_win, players, scores, board, steps), file)
+  print("\nGame has been saved.", end='')
 
 def generate_board():
   return ([[EMPTY]*board_size for i in range(board_size)])
@@ -90,7 +105,6 @@ def prompt_action(player, prompt=''):
 
 # def print_board():
 #   """v0: For testing purposes"""
-#   print(100*'\n')
 #   for row in board:
 #     print(row)
 
@@ -119,23 +133,6 @@ def print_scores():
         f" - {players[1]}: " +
         colored(f"{scores[1]}\n", COLORS[1]))
 
-# ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓
-def game_save():
-  with open("saved.pickle", "wb") as file:
-    pickle.dump((board_size, to_win, players, scores, board, steps), file)
-  print("\nGame has been saved.", end='')
-
-def game_load():
-  with open("saved.pickle", "rb") as file:
-    payload = pickle.load(file)
-  remove("saved.pickle")
-  return payload
-
-def game_new():
-  return get_board_size(), get_to_win(), get_player_names(), [0, 0]
-  scores = [0, 0]
-# ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑
-
 def quit():
   print(GOODBYE)
   exit()
@@ -146,8 +143,11 @@ COLUMNS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ' # Included whole ABC for error handling
 COLORS = ['red', 'green']
 MARKS = [colored('X', COLORS[0]), colored('O', COLORS[1])]
 EMPTY = ' '
-HELLO = ("*** Hello and welcome to " + colored("Tic-tac-toe ", attrs=['bold'])
+WELCOME = ("*** Hello and welcome to " + colored("Tic-tac-toe ", attrs=['bold'])
          + "by " + colored("2heads", 'blue', attrs=['bold']) + "! ***\n")
+WELCOME_BACK = ("*** Welcome back to " + colored("Tic-tac-toe ", attrs=['bold'])
+              + "by " + colored("2heads", 'blue', attrs=['bold']) + "! ***\n"
+                "\nContinuing from where you left off last time...\n")
 GOODBYE = ("\n*** Thanks for playing. " + colored("Goodbye!", attrs=['bold']) +
            " ***\n")
 INSTRUCTIONS = ("Save game and exit: 's'\n"
@@ -165,11 +165,13 @@ steps = []
 
 
 try:
-  print('\n'*100 + HELLO)
+  system('clear')
   try:
     board_size, to_win, players, scores, board, steps = game_load()
+    print(WELCOME_BACK)
     from_load = True # HACK
   except FileNotFoundError:
+    print(WELCOME)
     board_size, to_win, players, scores = game_new()
     from_load = False # HACK
   wants_to_play = True
@@ -177,11 +179,12 @@ try:
     if not from_load:
       board = generate_board()
       steps = [0, 0]
-    from_load = False # HACK
     winner = None
     while not winner:
       for player in range(2):  
-        print('\n'*100)
+        if not from_load:
+          system('clear')
+        from_load = False # HACK
         if sum(scores) > 0:
           print_scores()
         print(INSTRUCTIONS)
@@ -191,7 +194,8 @@ try:
         prompt_action(player)
         steps[player] += 1
         if did_player_win(player):
-          print("\n"*100)
+          system('clear')
+          print('\n'*3)
           print_board()
           print(colored(f"\n{players[player]} wins in {steps[player]} steps!",
                         COLORS[player], attrs=['bold']))
@@ -199,8 +203,8 @@ try:
           scores[player] += 1
           if sum(scores) > 1:
             print_scores()
-          if input(colored("Would you like to play again?", attrs=['bold']) + 
-                   " (y/n) ").lower()[0] == "n":
+          if input(colored("Would you like to play another round?",
+                           attrs=['bold']) + " (y/n) ").lower()[0] == "n":
             wants_to_play = False
           break
   quit()
