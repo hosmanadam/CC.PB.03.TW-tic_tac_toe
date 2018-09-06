@@ -38,7 +38,7 @@ def get_board_size(prompt="What size board (from 3-9) would you like to play on?
   """Determines actual playing area without headers, spacing, etc."""
   try:
     board_size = int(input(prompt))
-  except:
+  except ValueError:
     return get_board_size(prompt="You have to enter a natural number between 3 and 9. Try again: ")
   if board_size not in range(3, 10):
     return get_board_size(prompt="Board size has to be between 3 and 9. Try again: ")
@@ -50,7 +50,7 @@ def get_player_names():
 def get_to_win(prompt="How many marks in a row (from 3-5) to win? "):
   try:
     to_win = int(input(prompt))
-  except:
+  except ValueError:
     return get_to_win(prompt="You have to enter a natural number between 3 and 5. Try again: ")
   if to_win not in range(3, 6):
     return get_to_win(prompt="Winning size has to be between 3 and 5. Try again: ")
