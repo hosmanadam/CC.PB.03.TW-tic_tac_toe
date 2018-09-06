@@ -57,21 +57,28 @@ def get_to_win(prompt="How many marks in a row (from 3-5) to win? "):
   return to_win
 
 def place_mark(player, coordinates):
-  row = int(coordinates[1:])-1
-  column = COLUMNS.index(coordinates[0].upper())
-  if board[row][column] == EMPTY:
-    board[row][column] = MARKS[player]
-  else:
-    prompt_action(player, prompt="That spot is already taken. Try again: ")
+    row = int(coordinates[1:])-1
+    column = COLUMNS.index(coordinates[0].upper())
+    if board[row][column] == EMPTY:
+      board[row][column] = MARKS[player]
+    else:
+      prompt_action(player, prompt="That spot is already taken. Try again: ")
 
 def prompt_action(player, prompt=''):
-  action = input(prompt)
-  if action[0].lower() == 's':
-    save()
-    quit()
-  if action[0].lower() == 'q':
-    quit()
-  place_mark(player, action)
+  try:
+    action = input(prompt)
+    if int(action[1:]) < 1:
+      raise IndexError
+    if action[0].lower() == 's':
+      save()
+      quit()
+    if action[0].lower() == 'q':
+      quit()
+    place_mark(player, action)
+  except IndexError: 
+    prompt_action(player, prompt="Board is too small for that. Try again: ")
+  except ValueError: 
+    prompt_action(player, prompt="Incorrectly formatted coordinates. Try again: ")
   # ADD SAME ERROR HANDLING
 
 # def print_board():
@@ -123,7 +130,7 @@ def quit():
 
 print(100*'\n')
 
-COLUMNS = 'ABCDEFGHI'
+COLUMNS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ' # Included whole ABC for error handling
 COLORS = ['red', 'green']
 MARKS = [colored('X', COLORS[0]), colored('O', COLORS[1])]
 EMPTY = ' '
@@ -176,4 +183,5 @@ try:
           break
   quit()
 except KeyboardInterrupt:
+  print('')
   quit()
