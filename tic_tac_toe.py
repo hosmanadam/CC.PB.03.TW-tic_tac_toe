@@ -58,6 +58,8 @@ def get_to_win(prompt="How many marks in a row (from 3-5) to win? "):
 
 def place_mark(player, coordinates):
     row = int(coordinates[1:])-1
+    if row < 0:
+      raise IndexError
     column = COLUMNS.index(coordinates[0].upper())
     if board[row][column] == EMPTY:
       board[row][column] = MARKS[player]
@@ -67,8 +69,6 @@ def place_mark(player, coordinates):
 def prompt_action(player, prompt=''):
   try:
     action = input(prompt)
-    if int(action[1:]) < 1:
-      raise IndexError
     if action[0].lower() == 's':
       save()
       quit()
