@@ -41,13 +41,14 @@ def game_load():
   return payload
 
 def game_new():
-  payload = get_board_size(), get_to_win(), get_player_names(), [0, 0]
+  payload = get_board_size(), get_to_win(), get_player_names(), [0, 0], 0
   return payload
 
 def game_save():
   with open("saved.pickle", "wb") as file:
-    pickle.dump((board_size, to_win, players, scores, board, steps), file)
-  print("Game has been saved.")
+    pickle.dump((board_size, to_win, players, scores, board, steps,
+                 current_player), file)
+  print("Game has been saved.", end='')
 
 def generate_board():
   return ([[EMPTY]*board_size for i in range(board_size)])
@@ -86,6 +87,7 @@ def place_mark(player, coordinates):
     column = COLUMNS.index(coordinates[0].upper())
     if board[row][column] == EMPTY:
       board[row][column] = MARKS[player]
+      steps[player].append(coordinates)
     else:
       prompt_action(player, prompt="That spot is already taken. Try again: ")
 
@@ -134,6 +136,11 @@ def print_scores():
         f" - {players[1]}: " +
         colored(f"{scores[1]}", COLORS[1]))
 
+def quit():
+  print(GOODBYE); sleep(WAIT)
+  system('clear')
+  exit()
+
 def wants_rematch(prompt=colored("\nWould you like to play another round?",
                                  attrs=['bold']) + " (y/n) "):
   intention = input(prompt)
@@ -145,11 +152,6 @@ def wants_rematch(prompt=colored("\nWould you like to play another round?",
   except IndexError:
     return wants_rematch(prompt="Type something please: ")
   return wants_rematch(prompt="Say again? ")
-
-def quit():
-  print(GOODBYE); sleep(WAIT)
-  system('clear')
-  exit()
 
 
 # Create constants
@@ -182,40 +184,42 @@ steps = []
 try:
   system('clear')
   try:
-    board_size, to_win, players, scores, board, steps = game_load()
+    board_size, to_win, players, scores, board, steps, current_player = game_load()
     print(WELCOME_BACK[0]); sleep(WAIT)
     print(WELCOME_BACK[1]); sleep(WAIT)
     system('clear')
-    from_load = True # HACK
+    from_load = True # HACK1
   except FileNotFoundError:
     print(WELCOME); sleep(WAIT)
-    board_size, to_win, players, scores = game_new()
+    board_size, to_win, players, scores, current_player = game_new()
     print("\nLet's begin..."); sleep(WAIT)
-    from_load = False # HACK
+    from_load = False # HACK1
   wants_to_play = True
   while wants_to_play:
-    if not from_load:
-      board = generate_board()
-      steps = [0, 0]
+    if not from_load:          # HACK1
+      board = generate_board() # HACK1
+      steps = [[], []]         # HACK1
     winner = None
     while not winner:
       for player in range(2):  
-        if not from_load:
-          system('clear')
-        from_load = False # HACK
+        if not from_load: # HACK1
+          system('clear') # HACK1
+        from_load = False # HACK1
+        if player == 0 and len(steps[0]) > len(steps[1]):
+          continue # Makes loaded game start with next player
         print_scores(); print('')
         print(INSTRUCTIONS)
+        print(steps) # TEST
         print_board()
         print(colored(f"\n{players[player]}", COLORS[player], attrs=['bold']) +
                        ", make your move: ", end='')
         prompt_action(player)
-        steps[player] += 1
         if did_player_win(player):
           system('clear')
           print('\n'*5)
           print_board()
-          print(colored(f"\n{players[player]} wins in {steps[player]} steps!",
-                        COLORS[player], attrs=['bold'])); sleep(WAIT)
+          print(colored(f"\n{players[player]} wins in {len(steps[player])} "
+                         "steps!", COLORS[player], attrs=['bold'])); sleep(WAIT)
           winner = players[player]
           scores[player] += 1
           print_scores(); sleep(WAIT)
