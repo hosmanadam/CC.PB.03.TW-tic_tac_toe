@@ -32,6 +32,7 @@ def did_player_win(player):
       for x in range(*shape["range_x"]):
         if ([board[y + shape["step_y"]*i][x + shape["step_x"]*i]
             for i in range(to_win)] == [MARKS[player]]*to_win):
+          # TODO = Set winning_row coordinates
           return True
 
 def game_load():
@@ -88,8 +89,8 @@ def get_to_win(board_size, prompt="How many marks in a row to win? "
                              f"{minimum} and {maximum}. Try again: ")
   if to_win > maximum:
     return get_to_win(board_size, 
-                      prompt=f"Winning size can't be larger than board. "
-                              "Try again: ")
+                      prompt="Winning size can't be larger than board. "
+                             "Try again: ")
   if to_win < minimum:
     return get_to_win(board_size, 
                       prompt=f"Winning size has to be between {minimum} and "
@@ -134,9 +135,12 @@ def print_board(last_player):
     for row in range(board_size):
       print(str(row+1) + ' ', end='')
       for place in range(len(board[row])):
+# ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓
         # if winner in (0, 1) and ...:
         #   print("Somebody's won!")
-        if steps[last_player] and (place, row) == steps[last_player][-1]: # ELIF AFTER WINNER
+# ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑
+        if (winner == None and steps[last_player] # ELIF AFTER WINNER
+            and (place, row) == steps[last_player][-1]):
           print(colored(board[row][place], attrs=['bold']) + 
                 colored('←', 'blue', attrs=['bold']), end='')
         else:
