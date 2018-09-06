@@ -41,7 +41,8 @@ def game_load():
   return payload
 
 def game_new():
-  payload = get_board_size(), get_to_win(), get_player_names(), [0, 0], 0
+  board_size = get_board_size()
+  payload = board_size, get_to_win(board_size), get_player_names(), [0, 0], 0
   return payload
 
 def game_save():
@@ -69,15 +70,30 @@ def get_board_size(prompt="\nWhat size board (from 3-9) "
 def get_player_names():
   return [input("\nEnter Player 1 name: "), input("Enter Player 2 name: ")]
 
-def get_to_win(prompt="How many marks in a row (from 3-5) to win? "):
+def get_to_win(board_size, prompt="How many marks in a row to win? "
+                                  "(pick 4 or more) "):
+  if board_size == 3:
+    print("Place 3 marks in a row to win!")
+    return 3
+  if board_size == 4:
+    print("Place 4 marks in a row to win!")
+    return 4
+  if board_size > 4:
+    minimum, maximum = 4, board_size
   try:
     to_win = int(input(prompt))
   except ValueError:
-    return get_to_win(prompt="You have to enter a natural number between "
-                             "3 and 5. Try again: ")
-  if to_win not in range(3, 6):
-    return get_to_win(prompt="Winning size has to be between 3 and 5. "
-                             "Try again: ")
+    return get_to_win(board_size,
+                      prompt=f"You have to enter a natural number between "
+                             f"{minimum} and {maximum}. Try again: ")
+  if to_win > maximum:
+    return get_to_win(board_size, 
+                      prompt=f"Winning size can't be larger than board. "
+                              "Try again: ")
+  if to_win < minimum:
+    return get_to_win(board_size, 
+                      prompt=f"Winning size has to be between {minimum} and "
+                             f"{maximum}. Try again: ")
   return to_win
 
 def place_mark(player, coordinates):
@@ -120,7 +136,7 @@ def print_board(last_player):
       for place in range(len(board[row])):
         # if winner in (0, 1) and ...:
         #   print("Somebody's won!")
-        if steps[last_player] and (place, row) == steps[last_player][-1]: # NEEDS PLAYER + ELIF + NOT FIRST OCCURENCE OF VALUE
+        if steps[last_player] and (place, row) == steps[last_player][-1]: # ELIF AFTER WINNER
           print(colored(board[row][place], attrs=['bold']) + 
                 colored('←', 'blue', attrs=['bold']), end='')
         else:
@@ -210,7 +226,6 @@ try:
           continue # Makes loaded game start with next player
         print_scores(); print('')
         print(INSTRUCTIONS)
-        # print(steps) # TEST
         last_player = [x for x in (0, 1) if x != player][0]
         print_board(last_player)
         print(colored(f"\n{players[player]}", COLORS[player], attrs=['bold']) +
@@ -220,7 +235,7 @@ try:
           winner = player
           system('clear')
           print('\n'*5)
-          print_board(last_player)
+          print_board(last_player) # TODO - PASS WINNER
           print(colored(f"\n{players[player]} wins in {len(steps[player])} "
                          "steps!", COLORS[player], attrs=['bold'])); sleep(WAIT)
           scores[player] += 1
