@@ -48,7 +48,7 @@ def game_save():
   with open("saved.pickle", "wb") as file:
     pickle.dump((board_size, to_win, players, scores, board, steps,
                  current_player), file)
-  print("Game has been saved.", end='')
+  print("Game has been saved.")
 
 def generate_board():
   return ([[EMPTY]*board_size for i in range(board_size)])
@@ -87,7 +87,7 @@ def place_mark(player, coordinates):
     column = COLUMNS.index(coordinates[0].upper())
     if board[row][column] == EMPTY:
       board[row][column] = MARKS[player]
-      steps[player].append(coordinates)
+      steps[player].append((column, row))
     else:
       prompt_action(player, prompt="That spot is already taken. Try again: ")
 
