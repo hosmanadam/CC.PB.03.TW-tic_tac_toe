@@ -97,6 +97,10 @@ def get_to_win(board_size, prompt="How many marks in a row to win? "
                              f"{maximum}. Try again: ")
   return to_win
 
+def is_it_a_tie():
+  if len(steps[0]) + len(steps[1]) == board_size**2 and winner == None:
+    return True
+
 def place_mark(player, coordinates):
     row = int(coordinates[1:])-1
     if row < 0:
@@ -209,23 +213,23 @@ try:
     print(WELCOME_BACK[0]); sleep(WAIT)
     print(WELCOME_BACK[1]); sleep(WAIT)
     system('clear')
-    from_load = True # HACK1
+    from_load = True           # HACK 1
   except FileNotFoundError:
     print(WELCOME); sleep(WAIT)
     board_size, to_win, players, scores, current_player = game_new()
     print("\nLet's begin..."); sleep(WAIT)
-    from_load = False # HACK1
+    from_load = False          # HACK 1
   wants_to_play = True
   while wants_to_play:
-    if not from_load:          # HACK1
-      board = generate_board() # HACK1
-      steps = [[], []]         # HACK1
+    if not from_load:          # HACK 1
+      board = generate_board() # HACK 1
+      steps = [[], []]         # HACK 1
     winner = None
     while winner == None:
       for player in range(2):  
-        if not from_load: # HACK1
-          system('clear') # HACK1
-        from_load = False # HACK1
+        if not from_load:      # HACK 1
+          system('clear')      # HACK 1
+        from_load = False      # HACK 1
         if player == 0 and len(steps[0]) > len(steps[1]):
           continue # Makes loaded game start with next player
         print_scores(); print('')
@@ -235,6 +239,16 @@ try:
         print(colored(f"\n{players[player]}", COLORS[player], attrs=['bold']) +
                        ", make your move: ", end='')
         prompt_action(player)
+        if is_it_a_tie():
+          winner = 'tie'                                                   # HACK 2                                                        # HACK 2
+          system('clear')                                                  # HACK 2
+          print('\n'*5)                                                    # HACK 2
+          print_board(last_player)                                         # HACK 2
+          print(colored("\nIt's a tie!", attrs=['bold'])); sleep(WAIT)     # HACK 2
+          print_scores(); sleep(WAIT)                                      # HACK 2
+          if not wants_rematch():                                          # HACK 2
+            wants_to_play = False                                          # HACK 2
+          break                                                            # HACK 2
         if did_player_win(player):
           winner = player
           system('clear')
