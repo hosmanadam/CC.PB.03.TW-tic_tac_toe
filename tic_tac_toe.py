@@ -22,10 +22,10 @@ def did_player_win(player):
                      "step_y": 1,
                      "step_x": 1},
 
-            "urll": {"range_y": (2, board_size - stop),
-                     "range_x": (0, board_size - stop),
-                     "step_y": -1,
-                     "step_x": 1}}
+            "urll": {"range_y": (0, board_size - stop),
+                     "range_x": (2, board_size),
+                     "step_y": 1,
+                     "step_x": -1}}
 
   for shape in shapes.values():
     for y in range(*shape["range_y"]):
