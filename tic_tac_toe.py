@@ -240,15 +240,14 @@ try:
                        ", make your move: ", end='')
         prompt_action(player)
         if is_it_a_tie():
-          winner = 'tie'                                                   # HACK 2                                                        # HACK 2
-          system('clear')                                                  # HACK 2
-          print('\n'*5)                                                    # HACK 2
-          print_board(last_player)                                         # HACK 2
-          print(colored("\nIt's a tie!", attrs=['bold'])); sleep(WAIT)     # HACK 2
-          print_scores(); sleep(WAIT)                                      # HACK 2
-          if not wants_rematch():                                          # HACK 2
-            wants_to_play = False                                          # HACK 2
-          break                                                            # HACK 2
+          winner = 'tie'                                                # HACK 2                                                        # HACK 2
+          system('clear')                                               # HACK 2
+          print('\n'*5)                                                 # HACK 2
+          print_board(last_player)                                      # HACK 2
+          print(colored("\nIt's a tie!", attrs=['bold'])); sleep(WAIT)  # HACK 2
+          print_scores(); sleep(WAIT)                                   # HACK 2
+          wants_to_play = wants_rematch()                               # HACK 2
+          break                                                         # HACK 2
         if did_player_win(player):
           winner = player
           system('clear')
@@ -258,8 +257,7 @@ try:
                          "steps!", COLORS[player], attrs=['bold'])); sleep(WAIT)
           scores[player] += 1
           print_scores(); sleep(WAIT)
-          if not wants_rematch():
-            wants_to_play = False
+          wants_to_play = wants_rematch()
           break
   quit()
 except KeyboardInterrupt:
