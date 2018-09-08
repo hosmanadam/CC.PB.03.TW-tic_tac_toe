@@ -30,9 +30,11 @@ def did_player_win(player):
   for shape in shapes.values():
     for y in range(*shape["range_y"]):
       for x in range(*shape["range_x"]):
-        if ([board[y + shape["step_y"]*i][x + shape["step_x"]*i]
+        if ([board[y + shape["step_y"]*i][x + shape["step_x"]*i]            # TODO - remove duplication
             for i in range(to_win)] == [MARKS[player]]*to_win):
-          # TODO = Set winning_row coordinates
+          global winning_row # TODO - remove on refactor
+          winning_row = [((x + shape["step_x"]*i), (y + shape["step_y"]*i)) # TODO - remove duplication
+                         for i in range(to_win)]
           return True
 
 def game_load():
@@ -121,13 +123,13 @@ def prompt_action(player, prompt=''):
     if action.lower() == 'q':
       quit()
     place_mark(player, action)
-  except IndexError: 
+  except IndexError:
     prompt_action(player, prompt="Coordinates out of range. Try again: ")
-  except ValueError: 
+  except ValueError:
     prompt_action(player, prompt="Incorrectly formatted coordinates. "
                                  "Try again: ")
 
-def print_board(last_player):
+def print_board(last_player, winner):
   """v1: Minimalistic version without grid, with bold marks"""
   def print_column_headers():
     print('  ', end='')
@@ -135,24 +137,23 @@ def print_board(last_player):
       print(COLUMNS[i] + ' ', end='')
     print(' ')
 
-  def print_rows(last_player):
+  def print_rows(last_player, winner):
     for row in range(board_size):
       print(str(row+1) + ' ', end='')
-      for place in range(len(board[row])):
-# ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓
-        # if winner in (0, 1) and ...:
-        #   print("Somebody's won!")
-# ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑
-        if (winner == None and steps[last_player] # ELIF AFTER WINNER
+      for place in range(board_size):
+        if winner in (0, 1) and (place, row) in winning_row: # mark as winning row
+          print(colored(board[row][place], attrs=['bold']) +
+                colored('←', 'blue', attrs=['bold']), end='')
+        elif (winner == None and steps[last_player]          # mark as last step
             and (place, row) == steps[last_player][-1]):
           print(colored(board[row][place], attrs=['bold']) + 
                 colored('←', 'blue', attrs=['bold']), end='')
-        else:
+        else:                                                # print w/o marking
           print(colored(board[row][place], attrs=['bold']) + ' ', end='')
       print(str(row+1))
 
   print_column_headers()
-  print_rows(last_player)
+  print_rows(last_player, winner)
   print_column_headers()
 
 def print_scores():
@@ -201,9 +202,10 @@ board_size = None
 to_win = None
 players = []
 scores = []
+winning_row = [] # (x, y) coordinates (to be indexed as board[y][x])
 # Create round variables
 board = []
-steps = []
+steps = []       # (x, y) coordinates (to be indexed as board[y][x])
 
 
 try:
@@ -235,7 +237,7 @@ try:
         print_scores(); print('')
         print(INSTRUCTIONS)
         last_player = [x for x in (0, 1) if x != player][0]
-        print_board(last_player)
+        print_board(last_player, winner)
         print(colored(f"\n{players[player]}", COLORS[player], attrs=['bold']) +
                        ", make your move: ", end='')
         prompt_action(player)
@@ -243,7 +245,7 @@ try:
           winner = player
           system('clear')
           print('\n'*5)
-          print_board(last_player) # TODO - PASS WINNER
+          print_board(last_player, winner)
           print(colored(f"\n{players[player]} wins in {len(steps[player])} "
                          "steps!", COLORS[player], attrs=['bold'])); sleep(WAIT)
           scores[player] += 1
@@ -254,7 +256,7 @@ try:
           winner = 'tie'                                                # HACK 2                                                        # HACK 2
           system('clear')                                               # HACK 2
           print('\n'*5)                                                 # HACK 2
-          print_board(last_player)                                      # HACK 2
+          print_board(last_player, winner)                              # HACK 2
           print(colored("\nIt's a tie!", attrs=['bold'])); sleep(WAIT)  # HACK 2
           print_scores(); sleep(WAIT)                                   # HACK 2
           wants_to_play = wants_rematch()                               # HACK 2
