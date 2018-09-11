@@ -6,7 +6,7 @@ import pickle
 
 
 def did_player_win(player):
-  stop = to_win-1
+  stop = winning_size-1
   shapes = {"ud":   {"range_y": (0, board_size - stop),
                      "range_x": (0, board_size),
                      "step_y": 1,
@@ -31,10 +31,10 @@ def did_player_win(player):
     for y in range(*shape["range_y"]):
       for x in range(*shape["range_x"]):
         if ([board[y + shape["step_y"]*i][x + shape["step_x"]*i]            # TODO - remove duplication
-            for i in range(to_win)] == [MARKS[player]]*to_win):
+            for i in range(winning_size)] == [MARKS[player]]*winning_size):
           global winning_row # TODO - remove on refactor
           winning_row = [((x + shape["step_x"]*i), (y + shape["step_y"]*i)) # TODO - remove duplication
-                         for i in range(to_win)]
+                         for i in range(winning_size)]
           return True
 
 def game_load():
@@ -45,12 +45,12 @@ def game_load():
 
 def game_new():
   board_size = get_board_size()
-  payload = board_size, get_to_win(board_size), get_player_names(), [0, 0], 0
+  payload = board_size, get_winning_size(board_size), get_player_names(), [0, 0], 0
   return payload
 
 def game_save():
   with open("saved.pickle", "wb") as file:
-    pickle.dump((board_size, to_win, players, scores, board, steps,
+    pickle.dump((board_size, winning_size, players, scores, board, steps,
                  current_player), file)
   print("Game has been saved.")
 
@@ -73,8 +73,8 @@ def get_board_size(prompt="\nWhat size board (from 3-9) "
 def get_player_names():
   return [input("\nEnter Player 1 name: "), input("Enter Player 2 name: ")]
 
-def get_to_win(board_size, prompt="How many marks in a row to win? "
-                                  "(pick 4 or more) "):
+def get_winning_size(board_size, prompt="How many marks in a row to win? "
+                                        "(pick 4 or more) "):
   if board_size == 3:
     print("Place 3 marks in a row to win!")
     return 3
@@ -84,20 +84,20 @@ def get_to_win(board_size, prompt="How many marks in a row to win? "
   if board_size > 4:
     minimum, maximum = 4, board_size
   try:
-    to_win = int(input(prompt))
+    winning_size = int(input(prompt))
   except ValueError:
-    return get_to_win(board_size,
-                      prompt=f"You have to enter a natural number between "
-                             f"{minimum} and {maximum}. Try again: ")
-  if to_win > maximum:
-    return get_to_win(board_size, 
-                      prompt="Winning size can't be larger than board. "
-                             "Try again: ")
-  if to_win < minimum:
-    return get_to_win(board_size, 
-                      prompt=f"Winning size has to be between {minimum} and "
-                             f"{maximum}. Try again: ")
-  return to_win
+    return get_winning_size(board_size,
+                            prompt=f"You have to enter a natural number between "
+                                   f"{minimum} and {maximum}. Try again: ")
+  if winning_size > maximum:
+    return get_winning_size(board_size, 
+                            prompt="Winning size can't be larger than board. "
+                                   "Try again: ")
+  if winning_size < minimum:
+    return get_winning_size(board_size, 
+                            prompt=f"Winning size has to be between {minimum} and "
+                                  f"{maximum}. Try again: ")
+  return winning_size
 
 def is_it_a_tie():
   if len(steps[0]) + len(steps[1]) == board_size**2:
@@ -199,7 +199,7 @@ INSTRUCTIONS = ("Save game and exit: 's'\n"
                         "(e.g. 'a1', 'c2'):\n", attrs=['bold']))
 # Create game variables
 board_size = None
-to_win = None
+winning_size = None
 players = []
 scores = []
 winning_row = [] # (x, y) coordinates (to be indexed as board[y][x])
@@ -211,27 +211,25 @@ steps = []       # (x, y) coordinates (to be indexed as board[y][x])
 try:
   system('clear')
   try:
-    board_size, to_win, players, scores, board, steps, current_player = game_load()
+    board_size, winning_size, players, scores, board, steps, current_player = game_load()
     print(WELCOME_BACK[0]); sleep(WAIT)
     print(WELCOME_BACK[1]); sleep(WAIT)
-    system('clear')
     from_load = True           # HACK 1
   except FileNotFoundError:
     print(WELCOME); sleep(WAIT)
-    board_size, to_win, players, scores, current_player = game_new()
+    board_size, winning_size, players, scores, current_player = game_new()
     print("\nLet's begin..."); sleep(WAIT)
     from_load = False          # HACK 1
   wants_to_play = True
   while wants_to_play:
-    if not from_load:          # HACK 1
+    if not from_load:          # HACK 1 - resets round variables if game is new, not loaded
       board = generate_board() # HACK 1
       steps = [[], []]         # HACK 1
+    from_load = False          # HACK 1
     winner = None
     while winner == None:
-      for player in range(2):  
-        if not from_load:      # HACK 1
-          system('clear')      # HACK 1
-        from_load = False      # HACK 1
+      for player in range(2):
+        system('clear')
         if player == 0 and len(steps[0]) > len(steps[1]):
           continue # Makes loaded game start with next player
         print_scores(); print('')
@@ -253,8 +251,8 @@ try:
           wants_to_play = wants_rematch()
           break
         if is_it_a_tie():
-          winner = 'tie'                                                # HACK 2                                                        # HACK 2
-          system('clear')                                               # HACK 2
+          winner = 'tie'                                                # HACK 2 - duplicate of winning scenario
+          system('clear')                                               # HACK 2   w/ minor modifications
           print('\n'*5)                                                 # HACK 2
           print_board(last_player, winner)                              # HACK 2
           print(colored("\nIt's a tie!", attrs=['bold'])); sleep(WAIT)  # HACK 2
