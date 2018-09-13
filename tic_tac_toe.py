@@ -180,86 +180,88 @@ def wants_rematch(prompt=colored("\nWould you like to play another round?",
   return wants_rematch(prompt="Say again? ")
 
 
-# Create constants
-COLUMNS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ' # Included whole ABC for error handling
-COLORS = ['red', 'green']
-MARKS = [colored('X', COLORS[0]), colored('O', COLORS[1])]
-EMPTY = ' '
-WAIT = 1.5
-WELCOME = ("*** Hello and welcome to " + colored("Tic-tac-toe ", attrs=['bold'])
-         + "by " + colored("2heads", 'blue', attrs=['bold']) + "! ***")
-WELCOME_BACK = ["*** Welcome back to " + colored("Tic-tac-toe ", attrs=['bold'])
-              + "by " + colored("2heads", 'blue', attrs=['bold']) + "! ***",
-                "Continuing from where you left off..."]
-GOODBYE = ("\n*** Thanks for playing. " + colored("Goodbye!", attrs=['bold']) +
-           " ***")
-INSTRUCTIONS = ("Save game and exit: 's'\n"
-                "Exit without saving: 'q'\n" +
-                colored("Place mark by entering its coordinates "
-                        "(e.g. 'a1', 'c2'):\n", attrs=['bold']))
-# Create game variables
-board_size = None
-winning_size = None
-players = []
-scores = []
-winning_row = [] # (x, y) coordinates (to be indexed as board[y][x])
-# Create round variables
-board = []
-steps = []       # (x, y) coordinates (to be indexed as board[y][x])
+if __name__ == '__main__':
+  def main():
+    # Create constants
+    COLUMNS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ' # Included whole ABC for error handling
+    COLORS = ['red', 'green']
+    MARKS = [colored('X', COLORS[0]), colored('O', COLORS[1])]
+    EMPTY = ' '
+    WAIT = 1.5
+    WELCOME = ("*** Hello and welcome to " + colored("Tic-tac-toe ", attrs=['bold'])
+            + "by " + colored("2heads", 'blue', attrs=['bold']) + "! ***")
+    WELCOME_BACK = ["*** Welcome back to " + colored("Tic-tac-toe ", attrs=['bold'])
+                  + "by " + colored("2heads", 'blue', attrs=['bold']) + "! ***",
+                    "Continuing from where you left off..."]
+    GOODBYE = ("\n*** Thanks for playing. " + colored("Goodbye!", attrs=['bold']) +
+              " ***")
+    INSTRUCTIONS = ("Save game and exit: 's'\n"
+                    "Exit without saving: 'q'\n" +
+                    colored("Place mark by entering its coordinates "
+                            "(e.g. 'a1', 'c2'):\n", attrs=['bold']))
+    # Create game variables
+    board_size = None
+    winning_size = None
+    players = []
+    scores = []
+    winning_row = [] # (x, y) coordinates (to be indexed as board[y][x])
+    # Create round variables
+    board = []
+    steps = []       # (x, y) coordinates (to be indexed as board[y][x])
+    try:
+      system('clear')
+      try:
+        board_size, winning_size, players, scores, board, steps, current_player = game_load()
+        print(WELCOME_BACK[0]); sleep(WAIT)
+        print(WELCOME_BACK[1]); sleep(WAIT)
+        from_load = True           # HACK 1
+      except FileNotFoundError:
+        print(WELCOME); sleep(WAIT)
+        board_size, winning_size, players, scores, current_player = game_new()
+        print("\nLet's begin..."); sleep(WAIT)
+        from_load = False          # HACK 1
+      wants_to_play = True
+      while wants_to_play:
+        if not from_load:          # HACK 1 - resets round variables if game is new, not loaded
+          board = generate_board() # HACK 1
+          steps = [[], []]         # HACK 1
+        from_load = False          # HACK 1
+        winner = None
+        while winner == None:
+          for player in range(2):
+            system('clear')
+            if player == 0 and len(steps[0]) > len(steps[1]):
+              continue # Makes loaded game start with next player
+            print_scores(); print('')
+            print(INSTRUCTIONS)
+            last_player = [x for x in (0, 1) if x != player][0]
+            print_board(last_player, winner)
+            print(colored(f"\n{players[player]}", COLORS[player], attrs=['bold']) +
+                          ", make your move: ", end='')
+            prompt_action(player)
+            if did_player_win(player):
+              winner = player
+              system('clear')
+              print('\n'*5)
+              print_board(last_player, winner)
+              print(colored(f"\n{players[player]} wins in {len(steps[player])} "
+                            "steps!", COLORS[player], attrs=['bold'])); sleep(WAIT)
+              scores[player] += 1
+              print_scores(); sleep(WAIT)
+              wants_to_play = wants_rematch()
+              break
+            if is_it_a_tie():
+              winner = 'tie'                                                # HACK 2 - duplicate of winning scenario
+              system('clear')                                               # HACK 2   w/ minor modifications
+              print('\n'*5)                                                 # HACK 2
+              print_board(last_player, winner)                              # HACK 2
+              print(colored("\nIt's a tie!", attrs=['bold'])); sleep(WAIT)  # HACK 2
+              print_scores(); sleep(WAIT)                                   # HACK 2
+              wants_to_play = wants_rematch()                               # HACK 2
+              break                                                         # HACK 2
+      quit()
+    except KeyboardInterrupt:
+      print('')
+      quit()
 
-
-try:
-  system('clear')
-  try:
-    board_size, winning_size, players, scores, board, steps, current_player = game_load()
-    print(WELCOME_BACK[0]); sleep(WAIT)
-    print(WELCOME_BACK[1]); sleep(WAIT)
-    from_load = True           # HACK 1
-  except FileNotFoundError:
-    print(WELCOME); sleep(WAIT)
-    board_size, winning_size, players, scores, current_player = game_new()
-    print("\nLet's begin..."); sleep(WAIT)
-    from_load = False          # HACK 1
-  wants_to_play = True
-  while wants_to_play:
-    if not from_load:          # HACK 1 - resets round variables if game is new, not loaded
-      board = generate_board() # HACK 1
-      steps = [[], []]         # HACK 1
-    from_load = False          # HACK 1
-    winner = None
-    while winner == None:
-      for player in range(2):
-        system('clear')
-        if player == 0 and len(steps[0]) > len(steps[1]):
-          continue # Makes loaded game start with next player
-        print_scores(); print('')
-        print(INSTRUCTIONS)
-        last_player = [x for x in (0, 1) if x != player][0]
-        print_board(last_player, winner)
-        print(colored(f"\n{players[player]}", COLORS[player], attrs=['bold']) +
-                       ", make your move: ", end='')
-        prompt_action(player)
-        if did_player_win(player):
-          winner = player
-          system('clear')
-          print('\n'*5)
-          print_board(last_player, winner)
-          print(colored(f"\n{players[player]} wins in {len(steps[player])} "
-                         "steps!", COLORS[player], attrs=['bold'])); sleep(WAIT)
-          scores[player] += 1
-          print_scores(); sleep(WAIT)
-          wants_to_play = wants_rematch()
-          break
-        if is_it_a_tie():
-          winner = 'tie'                                                # HACK 2 - duplicate of winning scenario
-          system('clear')                                               # HACK 2   w/ minor modifications
-          print('\n'*5)                                                 # HACK 2
-          print_board(last_player, winner)                              # HACK 2
-          print(colored("\nIt's a tie!", attrs=['bold'])); sleep(WAIT)  # HACK 2
-          print_scores(); sleep(WAIT)                                   # HACK 2
-          wants_to_play = wants_rematch()                               # HACK 2
-          break                                                         # HACK 2
-  quit()
-except KeyboardInterrupt:
-  print('')
-  quit()
+  main()
