@@ -96,7 +96,7 @@ def get_winning_size(board_size, prompt="How many marks in a row to win? "
   if winning_size < minimum:
     return get_winning_size(board_size, 
                             prompt=f"Winning size has to be between {minimum} and "
-                                  f"{maximum}. Try again: ")
+                                   f"{maximum}. Try again: ")
   return winning_size
 
 def is_it_a_tie():
