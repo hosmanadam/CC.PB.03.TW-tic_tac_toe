@@ -1,10 +1,11 @@
-# from os import remove, system
-# from sys import exit
+from os import remove, system
+from sys import exit
 from termcolor import colored
-# from time import sleep
-# import pickle
+from time import sleep
+import pickle
 
-def did_player_win(player):
+
+def did_player_win(player, winning_size, board_size, board, MARKS):
   stop = winning_size-1
   shapes = {"ud":   {"range_y": (0, board_size - stop),
                      "range_x": (0, board_size),
@@ -33,7 +34,7 @@ def did_player_win(player):
             for i in range(winning_size)] == [MARKS[player]]*winning_size):
           winning_row = [((x + shape["step_x"]*i), (y + shape["step_y"]*i)) # TODO - remove duplication
                          for i in range(winning_size)]
-          return True
+          return winning_row
 
 def game_load():
   with open("saved.pickle", "rb") as file:
@@ -46,13 +47,12 @@ def game_new():
   payload = board_size, get_winning_size(board_size), get_player_names(), [0, 0], 0
   return payload
 
-def game_save():
+def game_save(*args):
   with open("saved.pickle", "wb") as file:
-    pickle.dump((board_size, winning_size, players, scores, board, steps,
-                 current_player), file)
+    pickle.dump(args, file)
   print("Game has been saved.")
 
-def generate_board():
+def generate_board(EMPTY, board_size):
   return ([[EMPTY]*board_size for i in range(board_size)])
 
 def get_board_size(prompt="\nWhat size board (from 3-9) "
@@ -97,11 +97,12 @@ def get_winning_size(board_size, prompt="How many marks in a row to win? "
                                    f"{maximum}. Try again: ")
   return winning_size
 
-def is_it_a_tie():
+def is_it_a_tie(steps, board_size):
   if len(steps[0]) + len(steps[1]) == board_size**2:
     return True
 
-def place_mark(player, coordinates):
+def place_mark(coordinates,
+               player, COLUMNS, EMPTY, MARKS, board, steps, GOODBYE, WAIT, *args):
     row = int(coordinates[1:])-1
     if row < 0:
       raise IndexError
@@ -110,32 +111,35 @@ def place_mark(player, coordinates):
       board[row][column] = MARKS[player]
       steps[player].append((column, row))
     else:
-      prompt_action(player, prompt="That spot is already taken. Try again: ")
+      prompt_action(player, COLUMNS, EMPTY, MARKS, board, steps, GOODBYE, WAIT, *args,
+                    prompt="That spot is already taken. Try again: ")
 
-def prompt_action(player, prompt=''):
+def prompt_action(player, COLUMNS, EMPTY, MARKS, board, steps, GOODBYE, WAIT, *args, prompt=''):
   try:
     action = input(prompt)
     if action.lower() == 's':
-      game_save(); sleep(WAIT/2)
-      quit()
+      game_save(*args); sleep(WAIT/2)
+      quit(GOODBYE, WAIT)
     if action.lower() == 'q':
-      quit()
-    place_mark(player, action)
+      quit(GOODBYE, WAIT)
+    place_mark(action,
+               player, COLUMNS, EMPTY, MARKS, board, steps, GOODBYE, WAIT, *args)
   except IndexError:
-    prompt_action(player, prompt="Coordinates out of range. Try again: ")
+    prompt_action(player, COLUMNS, EMPTY, MARKS, board, steps, GOODBYE, WAIT, *args,
+                  prompt="Coordinates out of range. Try again: ")
   except ValueError:
-    prompt_action(player, prompt="Incorrectly formatted coordinates. "
-                                 "Try again: ")
+    prompt_action(player, COLUMNS, EMPTY, MARKS, board, steps, GOODBYE, WAIT, *args,
+                  prompt="Incorrectly formatted coordinates. Try again: ")
 
-def print_board(last_player, winner):
+def print_board(last_player, winner, board_size, COLUMNS, winning_row, board, steps):
   """v1: Minimalistic version without grid, with bold marks"""
-  def print_column_headers():
+  def print_column_headers(board_size, COLUMNS):
     print('  ', end='')
     for i in range(board_size):
       print(COLUMNS[i] + ' ', end='')
     print(' ')
 
-  def print_rows(last_player, winner):
+  def print_rows(last_player, winner, board_size, winning_row, board, steps):
     for row in range(board_size):
       print(str(row+1) + ' ', end='')
       for place in range(board_size):
@@ -150,17 +154,17 @@ def print_board(last_player, winner):
           print(colored(board[row][place], attrs=['bold']) + ' ', end='')
       print(str(row+1))
 
-  print_column_headers()
-  print_rows(last_player, winner)
-  print_column_headers()
+  print_column_headers(board_size, COLUMNS)
+  print_rows(last_player, winner, board_size, winning_row, board, steps)
+  print_column_headers(board_size, COLUMNS)
 
-def print_scores():
+def print_scores(players, scores, COLORS):
   print(f"{players[0]}: " +
         colored(f"{scores[0]}", COLORS[0]) +
         f" - {players[1]}: " +
         colored(f"{scores[1]}", COLORS[1]))
 
-def quit():
+def quit(GOODBYE, WAIT):
   print(GOODBYE); sleep(WAIT)
   system('clear')
   exit()
