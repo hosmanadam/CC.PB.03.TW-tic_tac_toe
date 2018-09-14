@@ -9,30 +9,29 @@ def did_player_win(player):
   stop = winning_size-1
   shapes = {"ud":   {"range_y": (0, board_size - stop),
                      "range_x": (0, board_size),
-                     "step_y": 1,
-                     "step_x": 0},
+                      "step_y": 1,
+                      "step_x": 0},
 
             "lr":   {"range_y": (0, board_size),
                      "range_x": (0, board_size - stop),
-                     "step_y": 0,
-                     "step_x": 1},
+                      "step_y": 0,
+                      "step_x": 1},
 
             "ullr": {"range_y": (0, board_size - stop),
                      "range_x": (0, board_size - stop),
-                     "step_y": 1,
-                     "step_x": 1},
+                      "step_y": 1,
+                      "step_x": 1},
 
             "urll": {"range_y": (0, board_size - stop),
                      "range_x": (2, board_size),
-                     "step_y": 1,
-                     "step_x": -1}}
+                      "step_y": 1,
+                      "step_x": -1}}
 
   for shape in shapes.values():
     for y in range(*shape["range_y"]):
       for x in range(*shape["range_x"]):
         if ([board[y + shape["step_y"]*i][x + shape["step_x"]*i]            # TODO - remove duplication
             for i in range(winning_size)] == [MARKS[player]]*winning_size):
-          global winning_row # TODO - remove on refactor
           winning_row = [((x + shape["step_x"]*i), (y + shape["step_y"]*i)) # TODO - remove duplication
                          for i in range(winning_size)]
           return True
@@ -182,83 +181,59 @@ def wants_rematch(prompt=colored("\nWould you like to play another round?",
 
 if __name__ == '__main__':
   def main():
-    # Create constants
-    COLUMNS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ' # Included whole ABC for error handling
-    COLORS = ['red', 'green']
-    MARKS = [colored('X', COLORS[0]), colored('O', COLORS[1])]
-    EMPTY = ' '
-    WAIT = 1.5
-    WELCOME = ("*** Hello and welcome to " + colored("Tic-tac-toe ", attrs=['bold'])
-            + "by " + colored("2heads", 'blue', attrs=['bold']) + "! ***")
-    WELCOME_BACK = ["*** Welcome back to " + colored("Tic-tac-toe ", attrs=['bold'])
-                  + "by " + colored("2heads", 'blue', attrs=['bold']) + "! ***",
-                    "Continuing from where you left off..."]
-    GOODBYE = ("\n*** Thanks for playing. " + colored("Goodbye!", attrs=['bold']) +
-              " ***")
-    INSTRUCTIONS = ("Save game and exit: 's'\n"
-                    "Exit without saving: 'q'\n" +
-                    colored("Place mark by entering its coordinates "
-                            "(e.g. 'a1', 'c2'):\n", attrs=['bold']))
-    # Create game variables
-    board_size = None
-    winning_size = None
-    players = []
-    scores = []
-    winning_row = [] # (x, y) coordinates (to be indexed as board[y][x])
-    # Create round variables
-    board = []
-    steps = []       # (x, y) coordinates (to be indexed as board[y][x])
+    import data.variables as v
+    import data.constants as c
     try:
       system('clear')
       try:
-        board_size, winning_size, players, scores, board, steps, current_player = game_load()
-        print(WELCOME_BACK[0]); sleep(WAIT)
-        print(WELCOME_BACK[1]); sleep(WAIT)
-        from_load = True           # HACK 1
+        v.board_size, v.winning_size, v.players, v.scores, v.board, v.steps, current_player = game_load()
+        print(c.WELCOME_BACK[0]); sleep(c.WAIT)
+        print(c.WELCOME_BACK[1]); sleep(c.WAIT)
+        from_load = True             # HACK 1
       except FileNotFoundError:
-        print(WELCOME); sleep(WAIT)
-        board_size, winning_size, players, scores, current_player = game_new()
-        print("\nLet's begin..."); sleep(WAIT)
-        from_load = False          # HACK 1
+        print(c.WELCOME); sleep(c.WAIT)
+        v.board_size, v.winning_size, v.players, v.scores, current_player = game_new()
+        print("\nLet's begin..."); sleep(c.WAIT)
+        from_load = False            # HACK 1
       wants_to_play = True
       while wants_to_play:
-        if not from_load:          # HACK 1 - resets round variables if game is new, not loaded
-          board = generate_board() # HACK 1
-          steps = [[], []]         # HACK 1
-        from_load = False          # HACK 1
+        if not from_load:            # HACK 1 - resets round variables if game is new, not loaded
+          v.board = generate_board() # HACK 1
+          v.steps = [[], []]         # HACK 1
+        from_load = False            # HACK 1
         winner = None
         while winner == None:
           for player in range(2):
             system('clear')
-            if player == 0 and len(steps[0]) > len(steps[1]):
+            if player == 0 and len(v.steps[0]) > len(v.steps[1]):
               continue # Makes loaded game start with next player
             print_scores(); print('')
-            print(INSTRUCTIONS)
+            print(c.INSTRUCTIONS)
             last_player = [x for x in (0, 1) if x != player][0]
             print_board(last_player, winner)
-            print(colored(f"\n{players[player]}", COLORS[player], attrs=['bold']) +
-                          ", make your move: ", end='')
+            print(colored(f"\n{v.players[player]}", c.COLORS[player], attrs=['bold']) +
+                           ", make your move: ", end='')
             prompt_action(player)
             if did_player_win(player):
               winner = player
               system('clear')
               print('\n'*5)
               print_board(last_player, winner)
-              print(colored(f"\n{players[player]} wins in {len(steps[player])} "
-                            "steps!", COLORS[player], attrs=['bold'])); sleep(WAIT)
-              scores[player] += 1
-              print_scores(); sleep(WAIT)
+              print(colored(f"\n{v.players[player]} wins in {len(v.steps[player])} "
+                             "steps!", c.COLORS[player], attrs=['bold'])); sleep(c.WAIT)
+              v.scores[player] += 1
+              print_scores(); sleep(c.WAIT)
               wants_to_play = wants_rematch()
               break
             if is_it_a_tie():
-              winner = 'tie'                                                # HACK 2 - duplicate of winning scenario
-              system('clear')                                               # HACK 2   w/ minor modifications
-              print('\n'*5)                                                 # HACK 2
-              print_board(last_player, winner)                              # HACK 2
-              print(colored("\nIt's a tie!", attrs=['bold'])); sleep(WAIT)  # HACK 2
-              print_scores(); sleep(WAIT)                                   # HACK 2
-              wants_to_play = wants_rematch()                               # HACK 2
-              break                                                         # HACK 2
+              winner = 'tie'                                                  # HACK 2 - duplicate of winning scenario
+              system('clear')                                                 # HACK 2   w/ minor modifications
+              print('\n'*5)                                                   # HACK 2
+              print_board(last_player, winner)                                # HACK 2
+              print(colored("\nIt's a tie!", attrs=['bold'])); sleep(c.WAIT)  # HACK 2
+              print_scores(); sleep(c.WAIT)                                   # HACK 2
+              wants_to_play = wants_rematch()                                 # HACK 2
+              break                                                           # HACK 2
       quit()
     except KeyboardInterrupt:
       print('')
