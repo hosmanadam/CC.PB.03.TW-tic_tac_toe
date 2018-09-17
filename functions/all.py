@@ -47,9 +47,9 @@ def game_new():
   payload = board_size, get_winning_size(board_size), get_player_names(), [0, 0]
   return payload
 
-def game_save(*args):
+def game_save(g):
   with open("saved.pickle", "wb") as file:
-    pickle.dump(args, file)
+    pickle.dump(g, file)
   print("Game has been saved.")
 
 def generate_board(EMPTY, board_size):
@@ -102,7 +102,7 @@ def is_it_a_tie(steps, board_size):
     return True
 
 def place_mark(coordinates,
-               player, COLUMNS, EMPTY, MARKS, board, steps, GOODBYE, WAIT, *args):
+               player, COLUMNS, EMPTY, MARKS, board, steps, GOODBYE, WAIT, g):
     row = int(coordinates[1:])-1
     if row < 0:
       raise IndexError
@@ -111,24 +111,24 @@ def place_mark(coordinates,
       board[row][column] = MARKS[player]
       steps[player].append((column, row))
     else:
-      prompt_action(player, COLUMNS, EMPTY, MARKS, board, steps, GOODBYE, WAIT, *args,
+      prompt_action(player, COLUMNS, EMPTY, MARKS, board, steps, GOODBYE, WAIT, g,
                     prompt="That spot is already taken. Try again: ")
 
-def prompt_action(player, COLUMNS, EMPTY, MARKS, board, steps, GOODBYE, WAIT, *args, prompt=''):
+def prompt_action(player, COLUMNS, EMPTY, MARKS, board, steps, GOODBYE, WAIT, g, prompt=''):
   try:
     action = input(prompt)
     if action.lower() == 's':
-      game_save(*args); sleep(WAIT/2)
+      game_save(g); sleep(WAIT/2)
       quit(GOODBYE, WAIT)
     if action.lower() == 'q':
       quit(GOODBYE, WAIT)
     place_mark(action,
-               player, COLUMNS, EMPTY, MARKS, board, steps, GOODBYE, WAIT, *args)
+               player, COLUMNS, EMPTY, MARKS, board, steps, GOODBYE, WAIT, g)
   except IndexError:
-    prompt_action(player, COLUMNS, EMPTY, MARKS, board, steps, GOODBYE, WAIT, *args,
+    prompt_action(player, COLUMNS, EMPTY, MARKS, board, steps, GOODBYE, WAIT, g,
                   prompt="Coordinates out of range. Try again: ")
   except ValueError:
-    prompt_action(player, COLUMNS, EMPTY, MARKS, board, steps, GOODBYE, WAIT, *args,
+    prompt_action(player, COLUMNS, EMPTY, MARKS, board, steps, GOODBYE, WAIT, g,
                   prompt="Incorrectly formatted coordinates. Try again: ")
 
 def print_board(last_player, winner, board_size, COLUMNS, winning_row, board, steps):
