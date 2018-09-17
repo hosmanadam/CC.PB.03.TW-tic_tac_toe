@@ -31,12 +31,12 @@ if __name__ == '__main__':
         g = f.game_load()
         print(WELCOME_BACK[0]); sleep(WAIT)
         print(WELCOME_BACK[1]); sleep(WAIT)
-        from_load = True                                    # HACK 1
+        from_load = True                           # HACK 1
       except FileNotFoundError:
         print(WELCOME); sleep(WAIT)
         g = Game()
         print("\nLet's begin..."); sleep(WAIT)
-        from_load = False                                   # HACK 1
+        from_load = False                          # HACK 1
       wants_to_play = True
       while wants_to_play:
         if not from_load:                          # HACK 1 - resets round variables if game is new, not loaded
@@ -52,8 +52,7 @@ if __name__ == '__main__':
             f.print_scores(g.players, g.scores); print('')
             print(INSTRUCTIONS)
             last_player = [x for x in (0, 1) if x != player][0]
-            f.print_board(last_player, g.winner, g.board_size,
-                          g.winning_row, g.board, g.steps)
+            f.print_board(last_player, g)
             print(colored(f"\n{g.players[player]}", COLORS[player], attrs=['bold']) +
                            ", make your move: ", end='')
             f.prompt_action(player, g)
@@ -62,8 +61,7 @@ if __name__ == '__main__':
               g.winner = player
               system('clear')
               print('\n'*5)
-              f.print_board(last_player, g.winner, g.board_size,
-                            g.winning_row, g.board, g.steps)
+              f.print_board(last_player, g)
               print(colored(f"\n{g.players[player]} wins in {len(g.steps[player])} "
                              "steps!", COLORS[player], attrs=['bold'])); sleep(WAIT)
               g.scores[player] += 1
@@ -74,10 +72,9 @@ if __name__ == '__main__':
               g.winner = 'tie'                                                # HACK 2 - duplicate of winning scenario
               system('clear')                                                 # HACK 2   w/ minor modifications
               print('\n'*5)                                                   # HACK 2
-              f.print_board(last_player, g.winner, g.board_size,              # HACK 2
-                            g.winning_row, g.board, g.steps)                  # HACK 2
-              print(colored("\nIt's a tie!", attrs=['bold'])); sleep(WAIT)  # HACK 2
-              f.print_scores(g.players, g.scores); sleep(WAIT)              # HACK 2
+              f.print_board(last_player, g)                                   # HACK 2
+              print(colored("\nIt's a tie!", attrs=['bold'])); sleep(WAIT)    # HACK 2
+              f.print_scores(g.players, g.scores); sleep(WAIT)                # HACK 2
               wants_to_play = f.wants_rematch()                               # HACK 2
               break                                                           # HACK 2
       f.quit()

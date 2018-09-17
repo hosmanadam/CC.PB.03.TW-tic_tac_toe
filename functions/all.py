@@ -126,7 +126,7 @@ def prompt_action(player, g, prompt=''):
     prompt_action(player, g,
                   prompt="Incorrectly formatted coordinates. Try again: ")
 
-def print_board(last_player, winner, board_size, winning_row, board, steps):
+def print_board(last_player, g):
   """v1: Minimalistic version without grid, with bold marks"""
   def print_column_headers(board_size):
     print('  ', end='')
@@ -134,24 +134,24 @@ def print_board(last_player, winner, board_size, winning_row, board, steps):
       print(COLUMNS[i] + ' ', end='')
     print(' ')
 
-  def print_rows(last_player, winner, board_size, winning_row, board, steps):
-    for row in range(board_size):
+  def print_rows(last_player, g):
+    for row in range(g.board_size):
       print(str(row+1) + ' ', end='')
-      for place in range(board_size):
-        if winner in (0, 1) and (place, row) in winning_row: # mark as winning row
-          print(colored(board[row][place], attrs=['bold']) +
+      for place in range(g.board_size):
+        if g.winner in (0, 1) and (place, row) in g.winning_row: # mark as winning row
+          print(colored(g.board[row][place], attrs=['bold']) +
                 colored('←', 'blue', attrs=['bold']), end='')
-        elif (winner == None and steps[last_player]          # mark as last step
-              and (place, row) == steps[last_player][-1]):
-          print(colored(board[row][place], attrs=['bold']) + 
+        elif (g.winner == None and g.steps[last_player]          # mark as last step
+              and (place, row) == g.steps[last_player][-1]):
+          print(colored(g.board[row][place], attrs=['bold']) + 
                 colored('←', 'blue', attrs=['bold']), end='')
         else:                                                # print w/o marking
-          print(colored(board[row][place], attrs=['bold']) + ' ', end='')
+          print(colored(g.board[row][place], attrs=['bold']) + ' ', end='')
       print(str(row+1))
 
-  print_column_headers(board_size)
-  print_rows(last_player, winner, board_size, winning_row, board, steps)
-  print_column_headers(board_size)
+  print_column_headers(g.board_size)
+  print_rows(last_player, g)
+  print_column_headers(g.board_size)
 
 def print_scores(players, scores):
   print(f"{players[0]}: " +
