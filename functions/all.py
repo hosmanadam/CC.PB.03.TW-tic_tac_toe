@@ -42,11 +42,6 @@ def game_load():
   remove("saved.pickle")
   return payload
 
-def game_new():
-  board_size = get_board_size()
-  payload = board_size, get_winning_size(board_size), get_player_names(), [0, 0]
-  return payload
-
 def game_save(g):
   with open("saved.pickle", "wb") as file:
     pickle.dump(g, file)

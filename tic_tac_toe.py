@@ -4,15 +4,18 @@ from termcolor import colored
 from time import sleep
 import pickle
 
+import data.constants as c
+import functions.all as f
+
 
 class Game:
   def __init__(self):
     # Fixed at new game start 
-    self.board_size = None
-    self.winning_size = None
-    self.players = []
+    self.board_size = f.get_board_size()
+    self.winning_size = f.get_winning_size(self.board_size)
+    self.players = f.get_player_names()
     # Updated after every win
-    self.scores = []
+    self.scores = [0, 0]
     self.winner = None
     self.winning_row = [] # (x, y) coordinates (to be indexed as board[y][x])
     # Updated after every step
@@ -22,9 +25,6 @@ class Game:
 
 if __name__ == '__main__':
   def main():
-    import data.constants as c
-    import functions.all as f
-    g = Game()
     try:
       system('clear')
       try:
@@ -34,7 +34,7 @@ if __name__ == '__main__':
         from_load = True                                    # HACK 1
       except FileNotFoundError:
         print(c.WELCOME); sleep(c.WAIT)
-        g.board_size, g.winning_size, g.players, g.scores = f.game_new()
+        g = Game()
         print("\nLet's begin..."); sleep(c.WAIT)
         from_load = False                                   # HACK 1
       wants_to_play = True
