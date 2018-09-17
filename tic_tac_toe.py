@@ -59,7 +59,7 @@ if __name__ == '__main__':
             f.prompt_action(player, c.COLUMNS, c.EMPTY, c.MARKS, g.board, g.steps,   # for place_mark()
                             c.GOODBYE, c.WAIT,                                       # for quit()
                             g)                                                        # for game_save()
-            g.winning_row = f.did_player_win(player, g.winning_size, g.board_size, g.board, c.MARKS)
+            g.winning_row = f.did_player_win(player, g, c.MARKS)
             if g.winning_row:
               g.winner = player
               system('clear')

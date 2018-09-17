@@ -5,35 +5,35 @@ from time import sleep
 import pickle
 
 
-def did_player_win(player, winning_size, board_size, board, MARKS):
-  stop = winning_size-1
-  shapes = {"ud":   {"range_y": (0, board_size - stop),
-                     "range_x": (0, board_size),
+def did_player_win(player, g, MARKS):
+  stop = g.winning_size-1
+  shapes = {"ud":   {"range_y": (0, g.board_size - stop),
+                     "range_x": (0, g.board_size),
                       "step_y": 1,
                       "step_x": 0},
 
-            "lr":   {"range_y": (0, board_size),
-                     "range_x": (0, board_size - stop),
+            "lr":   {"range_y": (0, g.board_size),
+                     "range_x": (0, g.board_size - stop),
                       "step_y": 0,
                       "step_x": 1},
 
-            "ullr": {"range_y": (0, board_size - stop),
-                     "range_x": (0, board_size - stop),
+            "ullr": {"range_y": (0, g.board_size - stop),
+                     "range_x": (0, g.board_size - stop),
                       "step_y": 1,
                       "step_x": 1},
 
-            "urll": {"range_y": (0, board_size - stop),
-                     "range_x": (2, board_size),
+            "urll": {"range_y": (0, g.board_size - stop),
+                     "range_x": (2, g.board_size),
                       "step_y": 1,
                       "step_x": -1}}
 
   for shape in shapes.values():
     for y in range(*shape["range_y"]):
       for x in range(*shape["range_x"]):
-        if ([board[y + shape["step_y"]*i][x + shape["step_x"]*i]            # TODO - remove duplication
-            for i in range(winning_size)] == [MARKS[player]]*winning_size):
+        if ([g.board[y + shape["step_y"]*i][x + shape["step_x"]*i]            # TODO - remove duplication
+            for i in range(g.winning_size)] == [MARKS[player]]*g.winning_size):
           winning_row = [((x + shape["step_x"]*i), (y + shape["step_y"]*i)) # TODO - remove duplication
-                         for i in range(winning_size)]
+                         for i in range(g.winning_size)]
           return winning_row
 
 def game_load():
