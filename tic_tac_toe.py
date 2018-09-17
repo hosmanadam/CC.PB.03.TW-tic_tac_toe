@@ -27,13 +27,13 @@ if __name__ == '__main__':
     try:
       system('clear')
       try:
-        g.board_size, g.winning_size, g.players, g.scores, g.board, g.steps, current_player = f.game_load()
+        g.board_size, g.winning_size, g.players, g.scores, g.board, g.steps = f.game_load()
         print(c.WELCOME_BACK[0]); sleep(c.WAIT)
         print(c.WELCOME_BACK[1]); sleep(c.WAIT)
         from_load = True                                    # HACK 1
       except FileNotFoundError:
         print(c.WELCOME); sleep(c.WAIT)
-        g.board_size, g.winning_size, g.players, g.scores, current_player = f.game_new()
+        g.board_size, g.winning_size, g.players, g.scores = f.game_new()
         print("\nLet's begin..."); sleep(c.WAIT)
         from_load = False                                   # HACK 1
       wants_to_play = True
@@ -55,10 +55,10 @@ if __name__ == '__main__':
                           g.winning_row, g.board, g.steps)
             print(colored(f"\n{g.players[player]}", c.COLORS[player], attrs=['bold']) +
                            ", make your move: ", end='')
-            f.prompt_action(player, c.COLUMNS, c.EMPTY, c.MARKS, g.board, g.steps,  # for place_mark()
+            f.prompt_action(player, c.COLUMNS, c.EMPTY, c.MARKS, g.board, g.steps,   # for place_mark()
                             c.GOODBYE, c.WAIT,                                       # for quit()
                             g.board_size, g.winning_size, g.players, g.scores,       # for game_save()
-                            g.board, g.steps, current_player)                        # for game_save()
+                            g.board, g.steps)                                        # for game_save()
             g.winning_row = f.did_player_win(player, g.winning_size, g.board_size, g.board, c.MARKS)
             if g.winning_row:
               winner = player

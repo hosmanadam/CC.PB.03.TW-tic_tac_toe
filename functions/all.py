@@ -44,7 +44,7 @@ def game_load():
 
 def game_new():
   board_size = get_board_size()
-  payload = board_size, get_winning_size(board_size), get_player_names(), [0, 0], 0
+  payload = board_size, get_winning_size(board_size), get_player_names(), [0, 0]
   return payload
 
 def game_save(*args):
