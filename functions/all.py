@@ -8,6 +8,7 @@ from data.constants import *
 
 
 def did_player_win(player, g):
+  """TODO: write documentation"""
   stop = g.winning_size-1
   shapes = {"ud":   {"range_y": (0, g.board_size - stop),
                      "range_x": (0, g.board_size),
@@ -39,22 +40,26 @@ def did_player_win(player, g):
           return winning_row
 
 def game_load():
+  """TODO: write documentation"""
   with open("saved.pickle", "rb") as file:
     payload = pickle.load(file)
   remove("saved.pickle")
   return payload
 
 def game_save(g):
+  """TODO: write documentation"""
   with open("saved.pickle", "wb") as file:
     pickle.dump(g, file)
   print("Game has been saved.")
 
 def generate_board(board_size):
+  """TODO: write documentation"""
   return ([[EMPTY]*board_size for i in range(board_size)])
 
 def get_board_size(prompt="\nWhat size board (from 3-9) "
                           "would you like to play on? "):
-  """Determines actual playing area without headers, spacing, etc."""
+  """TODO: write documentation
+  Determines actual playing area without headers, spacing, etc."""
   try:
     board_size = int(input(prompt))
   except ValueError:
@@ -66,10 +71,12 @@ def get_board_size(prompt="\nWhat size board (from 3-9) "
   return board_size
 
 def get_player_names():
+  """TODO: write documentation"""
   return [input("\nEnter Player 1 name: "), input("Enter Player 2 name: ")]
 
 def get_winning_size(board_size, prompt="How many marks in a row to win? "
                                         "(pick 4 or more) "):
+  """TODO: write documentation"""
   if board_size == 3:
     print("Place 3 marks in a row to win!")
     return 3
@@ -95,22 +102,25 @@ def get_winning_size(board_size, prompt="How many marks in a row to win? "
   return winning_size
 
 def is_it_a_tie(steps, board_size):
+  """TODO: write documentation"""
   if len(steps[0]) + len(steps[1]) == board_size**2:
     return True
 
 def place_mark(coordinates, player, g):
-    row = int(coordinates[1:])-1
-    if row < 0:
-      raise IndexError
-    column = COLUMNS.index(coordinates[0].upper())
-    if g.board[row][column] == EMPTY:
-      g.board[row][column] = MARKS[player]
-      g.steps[player].append((column, row))
-    else:
-      prompt_action(player, g,
-                    prompt="That spot is already taken. Try again: ")
+  """TODO: write documentation"""
+  row = int(coordinates[1:])-1
+  if row < 0:
+    raise IndexError
+  column = COLUMNS.index(coordinates[0].upper())
+  if g.board[row][column] == EMPTY:
+    g.board[row][column] = MARKS[player]
+    g.steps[player].append((column, row))
+  else:
+    prompt_action(player, g,
+                  prompt="That spot is already taken. Try again: ")
 
 def prompt_action(player, g, prompt=''):
+  """TODO: write documentation"""
   try:
     action = input(prompt)
     if action.lower() == 's':
@@ -127,7 +137,8 @@ def prompt_action(player, g, prompt=''):
                   prompt="Incorrectly formatted coordinates. Try again: ")
 
 def print_board(last_player, g):
-  """v1: Minimalistic version without grid, with bold marks"""
+  """TODO: write documentation
+  Minimalistic version without grid, with bold marks"""
   def print_column_headers(board_size):
     print('  ', end='')
     for i in range(board_size):
@@ -145,7 +156,7 @@ def print_board(last_player, g):
               and (place, row) == g.steps[last_player][-1]):
           print(colored(g.board[row][place], attrs=['bold']) + 
                 colored('←', 'blue', attrs=['bold']), end='')
-        else:                                                # print w/o marking
+        else:                                                    # print w/o marking
           print(colored(g.board[row][place], attrs=['bold']) + ' ', end='')
       print(str(row+1))
 
@@ -154,18 +165,21 @@ def print_board(last_player, g):
   print_column_headers(g.board_size)
 
 def print_scores(players, scores):
+  """TODO: write documentation"""
   print(f"{players[0]}: " +
         colored(f"{scores[0]}", COLORS[0]) +
         f" - {players[1]}: " +
         colored(f"{scores[1]}", COLORS[1]))
 
 def quit():
+  """TODO: write documentation"""
   print(GOODBYE); sleep(WAIT)
   system('clear')
   exit()
 
 def wants_rematch(prompt=colored("\nWould you like to play another round?",
                                  attrs=['bold']) + " (y/n) "):
+  """TODO: write documentation"""
   intention = input(prompt)
   try:
     if intention.lower()[0] == "n":

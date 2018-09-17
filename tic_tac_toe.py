@@ -9,6 +9,7 @@ import functions.all as f
 
 
 class Game:
+  """TODO: write documentation"""
   def __init__(self):
     # Fixed at new game start 
     self.board_size = f.get_board_size()
