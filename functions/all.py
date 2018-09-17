@@ -4,8 +4,10 @@ from termcolor import colored
 from time import sleep
 import pickle
 
+from data.constants import *
 
-def did_player_win(player, g, MARKS):
+
+def did_player_win(player, g):
   stop = g.winning_size-1
   shapes = {"ud":   {"range_y": (0, g.board_size - stop),
                      "range_x": (0, g.board_size),
@@ -30,9 +32,9 @@ def did_player_win(player, g, MARKS):
   for shape in shapes.values():
     for y in range(*shape["range_y"]):
       for x in range(*shape["range_x"]):
-        if ([g.board[y + shape["step_y"]*i][x + shape["step_x"]*i]            # TODO - remove duplication
+        if ([g.board[y + shape["step_y"]*i][x + shape["step_x"]*i]           # TODO - remove duplication
             for i in range(g.winning_size)] == [MARKS[player]]*g.winning_size):
-          winning_row = [((x + shape["step_x"]*i), (y + shape["step_y"]*i)) # TODO - remove duplication
+          winning_row = [((x + shape["step_x"]*i), (y + shape["step_y"]*i))  # TODO - remove duplication
                          for i in range(g.winning_size)]
           return winning_row
 
@@ -47,7 +49,7 @@ def game_save(g):
     pickle.dump(g, file)
   print("Game has been saved.")
 
-def generate_board(EMPTY, board_size):
+def generate_board(board_size):
   return ([[EMPTY]*board_size for i in range(board_size)])
 
 def get_board_size(prompt="\nWhat size board (from 3-9) "
@@ -96,39 +98,37 @@ def is_it_a_tie(steps, board_size):
   if len(steps[0]) + len(steps[1]) == board_size**2:
     return True
 
-def place_mark(coordinates,
-               player, COLUMNS, EMPTY, MARKS, board, steps, GOODBYE, WAIT, g):
+def place_mark(coordinates, player, g):
     row = int(coordinates[1:])-1
     if row < 0:
       raise IndexError
     column = COLUMNS.index(coordinates[0].upper())
-    if board[row][column] == EMPTY:
-      board[row][column] = MARKS[player]
-      steps[player].append((column, row))
+    if g.board[row][column] == EMPTY:
+      g.board[row][column] = MARKS[player]
+      g.steps[player].append((column, row))
     else:
-      prompt_action(player, COLUMNS, EMPTY, MARKS, board, steps, GOODBYE, WAIT, g,
+      prompt_action(player, g,
                     prompt="That spot is already taken. Try again: ")
 
-def prompt_action(player, COLUMNS, EMPTY, MARKS, board, steps, GOODBYE, WAIT, g, prompt=''):
+def prompt_action(player, g, prompt=''):
   try:
     action = input(prompt)
     if action.lower() == 's':
       game_save(g); sleep(WAIT/2)
-      quit(GOODBYE, WAIT)
+      quit()
     if action.lower() == 'q':
-      quit(GOODBYE, WAIT)
-    place_mark(action,
-               player, COLUMNS, EMPTY, MARKS, board, steps, GOODBYE, WAIT, g)
+      quit()
+    place_mark(action, player, g)
   except IndexError:
-    prompt_action(player, COLUMNS, EMPTY, MARKS, board, steps, GOODBYE, WAIT, g,
+    prompt_action(player, g,
                   prompt="Coordinates out of range. Try again: ")
   except ValueError:
-    prompt_action(player, COLUMNS, EMPTY, MARKS, board, steps, GOODBYE, WAIT, g,
+    prompt_action(player, g,
                   prompt="Incorrectly formatted coordinates. Try again: ")
 
-def print_board(last_player, winner, board_size, COLUMNS, winning_row, board, steps):
+def print_board(last_player, winner, board_size, winning_row, board, steps):
   """v1: Minimalistic version without grid, with bold marks"""
-  def print_column_headers(board_size, COLUMNS):
+  def print_column_headers(board_size):
     print('  ', end='')
     for i in range(board_size):
       print(COLUMNS[i] + ' ', end='')
@@ -149,17 +149,17 @@ def print_board(last_player, winner, board_size, COLUMNS, winning_row, board, st
           print(colored(board[row][place], attrs=['bold']) + ' ', end='')
       print(str(row+1))
 
-  print_column_headers(board_size, COLUMNS)
+  print_column_headers(board_size)
   print_rows(last_player, winner, board_size, winning_row, board, steps)
-  print_column_headers(board_size, COLUMNS)
+  print_column_headers(board_size)
 
-def print_scores(players, scores, COLORS):
+def print_scores(players, scores):
   print(f"{players[0]}: " +
         colored(f"{scores[0]}", COLORS[0]) +
         f" - {players[1]}: " +
         colored(f"{scores[1]}", COLORS[1]))
 
-def quit(GOODBYE, WAIT):
+def quit():
   print(GOODBYE); sleep(WAIT)
   system('clear')
   exit()
