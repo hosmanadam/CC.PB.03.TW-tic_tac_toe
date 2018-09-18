@@ -9,7 +9,7 @@ import functions.all as f
 
 
 class Game:
-  """TODO: write documentation"""
+  """Contains all game variables, set to new game values on `__init__()`."""
   def __init__(self):
     # Fixed at new game start 
     self.board_size = f.get_board_size()
