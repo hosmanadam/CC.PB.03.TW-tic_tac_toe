@@ -9,7 +9,8 @@ from data.constants import *
 
 def did_player_win(player, game):
   """Checks board for winning_size length rows of player's mark.
-  Returns coordinates for if found."""
+  Returns list of coordinates (column, row) if found.
+  Example: `[(0, 0), (0, 1), (0, 2)]`"""
   stop = game.winning_size-1
   shapes = {"ud":   {"range_y": (0, game.board_size - stop),
                      "range_x": (0, game.board_size),
