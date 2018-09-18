@@ -1,15 +1,17 @@
+"""All functions for Tic-tac-toe."""
+
 from os import remove, system
 from sys import exit
 from termcolor import colored
 from time import sleep
 import pickle
 
-from data.constants import *
+from constants import *
+from classes import Game
 
 
-def did_player_win(player, game):
-  """Checks board for winning_size length rows of player's mark.
-  Returns list of coordinates (column, row) if found.
+def find_winning_row(player, game):
+  """Returns coordinates of winning row, if found.
   Example: `[(0, 0), (0, 1), (0, 2)]`"""
   stop = game.winning_size-1
   shapes = {"ud":   {"range_y": (0, game.board_size - stop),
@@ -35,11 +37,19 @@ def did_player_win(player, game):
   for shape in shapes.values():
     for y in range(*shape["range_y"]):
       for x in range(*shape["range_x"]):
-        if ([game.board[y + shape["step_y"]*i][x + shape["step_x"]*i]           # TODO - remove duplication
+        if ([game.board[y + shape["step_y"]*i][x + shape["step_x"]*i]           # TODO: remove duplication
             for i in range(game.winning_size)] == [MARKS[player]]*game.winning_size):
-          winning_row = [((x + shape["step_x"]*i), (y + shape["step_y"]*i))     # TODO - remove duplication
+          winning_row = [((x + shape["step_x"]*i), (y + shape["step_y"]*i))     # TODO: remove duplication
                          for i in range(game.winning_size)]
           return winning_row
+
+def game_create():
+  """Returns Game instance from load, else new."""
+  try:
+    game = game_load()
+  except FileNotFoundError:
+    game = Game()
+  return game
 
 def game_load():
   """Returns game instance from saved.pickle, then deletes file."""
@@ -48,11 +58,32 @@ def game_load():
   remove("saved.pickle")
   return payload
 
+def game_new_round(game):
+  """Resets round variables unless game was loaded just now."""
+  if not game.loaded_now:
+    game.board = generate_board(game.board_size)
+    game.steps = [[], []]
+    game.winner = None
+  game.loaded_now = False
+  return game
+
 def game_save(game):
   """Stores game instance in saved.pickle file."""
+  game.loaded_now = True
   with open("saved.pickle", "wb") as file:
     pickle.dump(game, file)
   print("Game has been saved.")
+
+def game_welcome_setup(game):
+  """Updates game rules & player names based on user input.
+  Skipped if game was loaded just now."""
+  welcome_start(game.loaded_now)
+  if not game.loaded_now:
+    game.board_size = get_board_size()
+    game.winning_size = get_winning_size(game.board_size)
+    game.players = get_player_names()
+  welcome_end(game.loaded_now)
+  return game
 
 def generate_board(board_size):
   """Returns 0-index list matrix populated with value of `EMPTY`.
@@ -148,7 +179,7 @@ def prompt_action(player, game, prompt=''):
     prompt_action(player, game,
                   prompt="Incorrectly formatted coordinates. Try again: ")
 
-def print_board(last_player, game):
+def print_board(game): # NOW: REMOVE LAST PLAYER
   """Prints formatted board with headers, padding and pointer arrows added in appropriate places."""
   def print_column_headers(board_size):
     """Prints A B C D E, etc. in a row."""
@@ -157,7 +188,7 @@ def print_board(last_player, game):
       print(COLUMNS[i] + ' ', end='')
     print(' ')
 
-  def print_rows(last_player, game):
+  def print_rows(game):
     """Prints each row with row number at both ends."""
     for row in range(game.board_size):
       print(str(row+1) + ' ', end='')
@@ -165,8 +196,8 @@ def print_board(last_player, game):
         if game.winner in (0, 1) and (place, row) in game.winning_row: # mark as winning row
           print(colored(game.board[row][place], attrs=['bold']) +
                 colored('←', 'blue', attrs=['bold']), end='')
-        elif (game.winner == None and game.steps[last_player]          # mark as last step
-              and (place, row) == game.steps[last_player][-1]):
+        elif (game.winner == None and game.steps[game.last_player]          # mark as last step
+              and (place, row) == game.steps[game.last_player][-1]):
           print(colored(game.board[row][place], attrs=['bold']) + 
                 colored('←', 'blue', attrs=['bold']), end='')
         else:                                                          # print w/o marking
@@ -174,7 +205,7 @@ def print_board(last_player, game):
       print(str(row+1))
 
   print_column_headers(game.board_size)
-  print_rows(last_player, game)
+  print_rows(game)
   print_column_headers(game.board_size)
 
 def print_scores(players, scores):
@@ -190,6 +221,15 @@ def quit():
   system('clear')
   exit()
 
+def update_screen(player, game):
+  """Clears screen. Prints scores, instructions and board."""
+  system('clear')
+  print_scores(game.players, game.scores); print('')
+  print(INSTRUCTIONS)
+  print_board(game)
+  print(colored(f"\n{game.players[player]}", COLORS[player], attrs=['bold']) +  # HACK
+                  ", make your move: ", end='')                                 # HACK
+
 def wants_rematch(prompt=colored("\nWould you like to play another round?",
                                  attrs=['bold']) + " (y/n) "):
   """Asks user if they want to play again and returns `True` or `False` based on input."""
@@ -202,3 +242,18 @@ def wants_rematch(prompt=colored("\nWould you like to play another round?",
   except IndexError:
     return wants_rematch(prompt="Type something please: ")
   return wants_rematch(prompt="Say again? ")
+
+def welcome_start(loaded_now):
+  """Prints `WELCOME` message, or `WELCOME_BACK` when continuing saved game."""
+  system('clear')
+  if loaded_now:
+    print(WELCOME_BACK); sleep(WAIT)
+  else:
+    print(WELCOME); sleep(WAIT)
+
+def welcome_end(loaded_now):
+  """Prints a bit of encouragement after setup is complete."""
+  if loaded_now:
+    print("\nContinuing from where you left off..."); sleep(WAIT)
+  else:
+    print("\nLet's begin..."); sleep(WAIT)

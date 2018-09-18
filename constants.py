@@ -10,9 +10,8 @@ WAIT = 1.5
 WELCOME = ("*** Hello and welcome to " + colored("Tic-tac-toe ", attrs=['bold'])
         + "by " + colored("2heads", 'blue', attrs=['bold']) + "! ***")
 
-WELCOME_BACK = ["*** Welcome back to " + colored("Tic-tac-toe ", attrs=['bold'])
-              + "by " + colored("2heads", 'blue', attrs=['bold']) + "! ***",
-                "Continuing from where you left off..."]
+WELCOME_BACK = ("*** Welcome back to " + colored("Tic-tac-toe ", attrs=['bold'])
+              + "by " + colored("2heads", 'blue', attrs=['bold']) + "! ***")
 
 GOODBYE = ("\n*** Thanks for playing. " + colored("Goodbye!", attrs=['bold']) +
           " ***")
