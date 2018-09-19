@@ -1,3 +1,5 @@
+"""
+
 input "Player vs. Computer or Player vs. Player"
 if player vs. computer:
 computerMoves:
@@ -44,7 +46,26 @@ computerMoves:
 computerCanWin = if it need 1 more mark to reach "isWinner"
 moveThere = winning row index + 1
 
+"""
 
+
+
+# ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓
+
+def find_empty_coordinates():
+  """Returns all coordinates on board with value `EMPTY`.
+  Example: `[(0, 0), (0, 1), (0, 2)]` → corresponds to a1-a2-a3"""
+  pass
+
+def ai_action()
+  possibilities = find_empty_coordinates()
+  place_mark(choice(possibilities))
+
+# ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑
+
+
+
+"""
 
 STAGE 1:
 TODO: fork main()
@@ -69,3 +90,5 @@ TODO: refactor find_winning_row
 
   # move duplicate logic to lower level function
   find_longest_row(player, game, iteration)
+  
+"""
