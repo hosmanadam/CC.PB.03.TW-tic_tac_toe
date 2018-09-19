@@ -73,12 +73,14 @@ def find_empty_coordinates(game):
   return empty_coordinates
 
 
-def ai_action():
+def ai_action(game):
   import random
-  possibilities = find_empty_coordinates()
+  possibilities = find_empty_coordinates(game)
   print("Computer is thinking...")
   sleep(WAIT)
-  place_mark(possibilities.random)
+  target = random.choice(possibilities)
+  place_mark(target, player, game)
+  
 
 # ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑
 
