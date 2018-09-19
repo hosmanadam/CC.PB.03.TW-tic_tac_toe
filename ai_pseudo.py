@@ -52,14 +52,33 @@ moveThere = winning row index + 1
 
 # ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓
 
-def find_empty_coordinates():
+def find_empty_coordinates(game):
   """Returns all coordinates on board with value `EMPTY`.
   Example: `[(0, 0), (0, 1), (0, 2)]` → corresponds to a1-a2-a3"""
-  pass
+  empty_coordinates = []
+  for row in game.board:
+      for mark in row:
+        if mark == EMPTY:
+            empty_coordinates.append(mark)
+          return 
 
-def ai_action()
+def find_empty_coordinates(game):
+  """Returns all coordinates on board with value `EMPTY`.
+  Example: `[(0, 0), (0, 1), (0, 2)]` → corresponds to a1-a2-a3"""
+  empty_coordinates = []
+  for row in range(game.board_size):
+      for place in range(game.board_size):
+        if board[row][place] == EMPTY:
+            empty_coordinates.append((place, row))
+  return empty_coordinates
+
+
+def ai_action():
+  import random
   possibilities = find_empty_coordinates()
-  place_mark(choice(possibilities))
+  print("Computer is thinking...")
+  sleep(WAIT)
+  place_mark(possibilities.random)
 
 # ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑
 
