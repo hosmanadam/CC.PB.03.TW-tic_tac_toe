@@ -43,3 +43,29 @@ computerMoves:
 
 computerCanWin = if it need 1 more mark to reach "isWinner"
 moveThere = winning row index + 1
+
+
+
+STAGE 1:
+TODO: fork main()
+  ↳ do you have a friend 
+  ↳ play against computer
+
+TODO: fork action logic ("if player = 'AI'")
+prompt_action() → place_mark()
+ai_action() →     place_mark()
+
+TODO: random "personality"
+  possibilities = find_empty_coordinates()
+  place_mark(choice(possibilities))
+
+
+STAGE X
+TODO: refactor find_winning_row
+
+  # reuse winning_row functionality
+  find_winning_row(player, game)            
+  find_best_row(player, game)               # analyzes rows for potential
+
+  # move duplicate logic to lower level function
+  find_longest_row(player, game, iteration)
