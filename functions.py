@@ -12,7 +12,7 @@ from classes import Game
 
 def find_winning_row(player, game):
   """Returns coordinates of winning row, if found.
-  Example: `[(0, 0), (0, 1), (0, 2)]`"""
+  Example: `[(0, 0), (0, 1), (0, 2)]` → corresponds to a1-a2-a3"""
   stop = game.winning_size-1
   shapes = {"ud":   {"range_y": (0, game.board_size - stop),
                      "range_x": (0, game.board_size),
@@ -49,6 +49,14 @@ def game_create():
     game = game_load()
   except FileNotFoundError:
     game = Game()
+  return game
+
+def game_handle_match_end(player, game):
+  if game.winning_row:
+    game.winner = player
+    game.scores[player] += 1
+  else:
+    game.winner = 'tie'
   return game
 
 def game_load():
@@ -142,7 +150,13 @@ def get_winning_size(board_size, prompt="How many marks in a row to win? "
 def is_it_a_tie(steps, board_size):
   """Returns `True` if board is full"""
   if len(steps[0]) + len(steps[1]) == board_size**2:
-  # TODO - rewrite to analyze board instead
+  # TODO: rewrite to analyze board instead
+    return True
+
+def is_wrong_player(player, game):
+  """Checks if wrong player is coming up. Used to prevent 
+  loaded game from starting with last player again."""
+  if player == game.last_player:
     return True
 
 def place_mark(coordinates, player, game):
@@ -179,7 +193,7 @@ def prompt_action(player, game, prompt=''):
     prompt_action(player, game,
                   prompt="Incorrectly formatted coordinates. Try again: ")
 
-def print_board(game): # NOW: REMOVE LAST PLAYER
+def print_board(game):
   """Prints formatted board with headers, padding and pointer arrows added in appropriate places."""
   def print_column_headers(board_size):
     """Prints A B C D E, etc. in a row."""
@@ -222,13 +236,27 @@ def quit():
   exit()
 
 def update_screen(player, game):
-  """Clears screen. Prints scores, instructions and board."""
+  """Clears screen. Prints scores, instructions and board if match is ongoing.
+  If match ended, omits instructions and prints result."""
   system('clear')
-  print_scores(game.players, game.scores); print('')
-  print(INSTRUCTIONS)
-  print_board(game)
-  print(colored(f"\n{game.players[player]}", COLORS[player], attrs=['bold']) +  # HACK
-                  ", make your move: ", end='')                                 # HACK
+  if game.winner == None:
+    print_scores(game.players, game.scores); print('')
+    print(INSTRUCTIONS)
+    print_board(game)
+    # TODO: move to prompt_action() and take print_board out of the if-else
+    print(colored(f"\n{game.players[player]}", COLORS[player], attrs=['bold']) +
+                   ", make your move: ", end='')
+  else:
+    print('\n'*5)
+    print_board(game)
+    # print_win(player, game)
+    if game.winner in (0, 1):
+      print(colored(f"\n{game.players[player]} wins in {len(game.steps[player])} "
+                     "steps!", COLORS[player], attrs=['bold'])); sleep(WAIT)
+    # print_tie(player, game)
+    elif game.winner == 'tie':
+      print(colored("\nIt's a tie!", attrs=['bold'])); sleep(WAIT)
+    print_scores(game.players, game.scores); sleep(WAIT)
 
 def wants_rematch(prompt=colored("\nWould you like to play another round?",
                                  attrs=['bold']) + " (y/n) "):
