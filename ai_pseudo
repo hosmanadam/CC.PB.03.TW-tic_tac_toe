@@ -1,0 +1,45 @@
+input "Player vs. Computer or Player vs. Player"
+if player vs. computer:
+computerMoves:
+    if computerStartsTheGame:
+
+    first step = center
+
+    if computerCanWin:
+        moveThere
+    elif playerCanWin:
+        moveThere
+
+    elif computerCanWin -1
+        moveNearby
+    elif playerCanWin -1
+        moveNearby
+
+    elif computerCanWin -2 
+        moveNearby
+    elif playerCanWin -2
+        moveNearby
+
+    if playerStartsTheGame:
+
+    if playerCanWin:
+    moveThere
+
+    elif computerCanWin:
+    moveThere
+
+    elif playerCanWin -1
+        moveNearby
+
+    elif computerCanWin -1
+        moveNearby
+
+    elif playerCanWin -2
+        moveNearby
+
+    elif computerCanWin -2
+        moveNearby
+
+
+computerCanWin = if it need 1 more mark to reach "isWinner"
+moveThere = winning row index + 1
