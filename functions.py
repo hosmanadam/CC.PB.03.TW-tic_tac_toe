@@ -308,14 +308,19 @@ def find_empty_coordinates(game):
   return empty_coordinates
 
 def ai_action(player, game):
+  """Prints AI 'thinking process' and places mark in random empty spot."""
   possibilities = find_empty_coordinates(game)
-  sleep(WAIT)
+  target = random.choice(possibilities)
+  sleep(WAIT/2)
   for i in range(3):
     print('.', end=''); stdout.flush(); sleep(WAIT/2)
-  target = random.choice(possibilities)
+  print(f" {COLUMNS[target[0]].lower()}", end=''); stdout.flush(); sleep(WAIT/10)
+  print(target[1]+1, end=''); stdout.flush(); sleep(WAIT/3)
   place_mark(target, player, game)
 
 def init_action(player, game):
+  """Decides whether human or AI is coming up.
+  Calls prompt_action() or ai_action() accordingly."""
   if game.players[player].lower() == 'ai':  # both players can be AI
     ai_action(player, game)
   else:
