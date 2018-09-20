@@ -7,7 +7,7 @@ from time import sleep
 import pickle
 
 from constants import *
-from classes import Game
+from classes import Game, SpotTakenError
 
 
 def find_winning_row(player, game):
@@ -162,16 +162,15 @@ def is_wrong_player(player, game):
 def place_mark(coordinates, player, game):
   """Places player's mark at passed coordinate.
   Example input coordinates: `'a4'` → `board[3][0]`"""
-  row = int(coordinates[1:])-1
+  row = coordinates[1]
+  column = coordinates[0]
   if row < 0:
     raise IndexError
-  column = COLUMNS.index(coordinates[0].upper())
   if game.board[row][column] == EMPTY:
     game.board[row][column] = MARKS[player]
     game.steps[player].append((column, row))
   else:
-    prompt_action(player, game,
-                  prompt="That spot is already taken. Try again: ")
+    raise SpotTakenError
 
 def prompt_action(player, game, prompt=''):
   """Asks user to input coordinates. Handles 3 input cases (plus errors):
@@ -183,15 +182,22 @@ def prompt_action(player, game, prompt=''):
     if action.lower() == 's':
       game_save(game); sleep(WAIT/2)
       quit()
-    if action.lower() == 'q':
+    elif action.lower() == 'q':
       quit()
-    place_mark(action, player, game)
+    else:
+      row = int(action[1:])-1
+      column = COLUMNS.index(action[0].upper())
+      coordinates = (column, row)
+      place_mark(coordinates, player, game)
   except IndexError:
     prompt_action(player, game,
                   prompt="Coordinates out of range. Try again: ")
   except ValueError:
     prompt_action(player, game,
                   prompt="Incorrectly formatted coordinates. Try again: ")
+  except SpotTakenError:
+    prompt_action(player, game,
+                  prompt="That spot is already taken. Try again: ")
 
 def print_board(game):
   """Prints formatted board with headers, padding and pointer arrows added in appropriate places."""
@@ -285,3 +291,32 @@ def welcome_end(loaded_now):
     print("\nContinuing from where you left off..."); sleep(WAIT)
   else:
     print("\nLet's begin..."); sleep(WAIT)
+
+# ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ AI STUFF ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓
+
+import random
+from sys import stdout
+
+def find_empty_coordinates(game):
+  """Returns all coordinates on board with value `EMPTY`.
+  Example: `[(0, 0), (0, 1), (0, 2)]` → corresponds to a1-a2-a3"""
+  empty_coordinates = []
+  for row in range(game.board_size):
+    for column in range(game.board_size):
+      if game.board[row][column] == EMPTY:
+        empty_coordinates.append((column, row))
+  return empty_coordinates
+
+def ai_action(player, game):
+  possibilities = find_empty_coordinates(game)
+  sleep(WAIT)
+  for i in range(3):
+    print('.', end=''); stdout.flush(); sleep(WAIT/2)
+  target = random.choice(possibilities)
+  place_mark(target, player, game)
+
+def init_action(player, game):
+  if game.players[player].lower() == 'ai':  # both players can be AI
+    ai_action(player, game)
+  else:
+    prompt_action(player, game)

@@ -19,7 +19,8 @@ def main():
         for player in (0, 1):
           if f.is_wrong_player(player, game): continue
           f.update_screen(player, game)
-          f.prompt_action(player, game)
+          # f.prompt_action(player, game) # AI STUFF
+          f.init_action(player, game)     # AI STUFF
           game.winning_row = f.find_winning_row(player, game)
           game.last_player = player
           if game.winning_row or f.is_it_a_tie(game.steps, game.board_size):
