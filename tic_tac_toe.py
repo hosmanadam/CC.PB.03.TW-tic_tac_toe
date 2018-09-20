@@ -1,37 +1,39 @@
 from os import remove, system
-from sys import exit
+from sys import exit, stdout
 from termcolor import colored
 from time import sleep
 import pickle
+import random
 
 from constants import *
-import functions as f
+from classes import Game, SpotTakenError
+
+from functions import f1, f2, f3
 
 
 def main():
   try:
-    game = f.game_create()
-    game = f.game_welcome_setup(game)
+    game = f1.game_create()
+    game = f1.game_welcome_setup(game)
     wants_to_play = True
     while wants_to_play:
-      game = f.game_new_round(game)
+      game = f1.game_new_round(game)
       while game.winner == None:
         for player in (0, 1):
-          if f.is_wrong_player(player, game): continue
-          f.update_screen(player, game)
-          # f.prompt_action(player, game) # AI STUFF
-          f.init_action(player, game)     # AI STUFF
-          game.winning_row = f.find_winning_row(player, game)
+          if f1.is_wrong_player(player, game): continue
+          f1.update_screen(player, game)
+          f1.init_action(player, game)     # AI stuff
+          game.winning_row = f1.find_winning_row(player, game)
           game.last_player = player
-          if game.winning_row or f.is_it_a_tie(game.steps, game.board_size):
-            game = f.game_handle_match_end(player, game)
-            f.update_screen(player, game)
-            wants_to_play = f.wants_rematch()
+          if game.winning_row or f1.is_it_a_tie(game.steps, game.board_size):
+            game = f1.game_handle_match_end(player, game)
+            f1.update_screen(player, game)
+            wants_to_play = f1.wants_rematch()
             break
-    f.quit()
+    f3.quit()
   except KeyboardInterrupt:
     print('')
-    f.quit()
+    f3.quit()
 
 
 if __name__ == '__main__':
