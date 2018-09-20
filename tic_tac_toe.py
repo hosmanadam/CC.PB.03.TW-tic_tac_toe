@@ -1,3 +1,5 @@
+"""Main module for Tic-tac-toe"""
+
 from os import remove, system
 from sys import exit, stdout
 from termcolor import colored
@@ -38,3 +40,4 @@ def main():
 
 if __name__ == '__main__':
   main()
+  

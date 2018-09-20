@@ -12,12 +12,12 @@ Board indexing must be done as `board[y][x]` (notice reverse order).
 
 ### Function hierarchy
 Functions are always called top-to-bottom, for example:
-– `main()` may call functions defined in `f1`, `f2`, `f3`.
+– `tic-tac-toe.main` may call functions defined in `f1`, `f2`, `f3`.
 – functions in `f2` may only call functions in `f3`.
-In other words, functions in the same file/module don't call each other, or ones above them.
+In other words, functions in the same file/module may **not** call each other, or ones above them.
 
 A funcion may call functions more than 1 level below it.
-  In this case, when the lower function has siblings (ones that are very similar in functionality, e.g. `game_load` and `game_save`), they all go to the lower level.
+In this case, when the lower function has siblings (ones that are very similar in functionality, e.g. `game_load` and `game_save`), they all go to the lower level.
 
 ### Function order
 Function definitions are listed alphabetically.

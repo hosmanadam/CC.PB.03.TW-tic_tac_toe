@@ -149,3 +149,4 @@ def wants_rematch(prompt=colored("\nWould you like to play another round?",
   except IndexError:
     return wants_rematch(prompt="Type something please: ")
   return wants_rematch(prompt="Say again? ")
+  
