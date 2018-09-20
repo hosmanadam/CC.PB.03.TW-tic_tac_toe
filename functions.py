@@ -37,11 +37,12 @@ def find_winning_row(player, game):
   for shape in shapes.values():
     for y in range(*shape["range_y"]):
       for x in range(*shape["range_x"]):
-        if ([game.board[y + shape["step_y"]*i][x + shape["step_x"]*i]           # TODO: remove duplication
-            for i in range(game.winning_size)] == [MARKS[player]]*game.winning_size):
-          winning_row = [((x + shape["step_x"]*i), (y + shape["step_y"]*i))     # TODO: remove duplication
-                         for i in range(game.winning_size)]
-          return winning_row
+        row_coordinates = [((x + shape["step_x"]*i), (y + shape["step_y"]*i))
+                           for i in range(game.winning_size)]
+        row_marks = [game.board[xy[1]][xy[0]] for xy in row_coordinates]
+        would_win = [MARKS[player]]*game.winning_size
+        if row_marks == would_win:
+          return row_coordinates
 
 def game_create():
   """Returns Game instance from load, else new."""
