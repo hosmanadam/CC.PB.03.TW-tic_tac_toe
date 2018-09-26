@@ -102,8 +102,7 @@ def init_action(player, game):
 def is_wrong_player(player, game):
   """Checks if wrong player is coming up. Used to prevent 
   loaded game from starting with last player again."""
-  if player == game.last_player:
-    return True
+  return player == game.last_player
 
 
 def is_it_a_tie(steps, board_size):
