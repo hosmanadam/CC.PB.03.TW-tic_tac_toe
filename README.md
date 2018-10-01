@@ -14,6 +14,7 @@ Board indexing must be done as `board[y][x]` (notice reverse order).
 Players are always represented as 0 or 1 in the game logic.
 This number is used to index all player-related attributes of game instance.
 Player names are only used for printing and to determine whether current player is AI.
+Players alternate in starting rounds, regardless of who won in the previous one.
 
 ### Function hierarchy
 Functions are always called top-to-bottom, for example:
