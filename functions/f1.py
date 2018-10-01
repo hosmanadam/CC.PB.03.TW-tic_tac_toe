@@ -1,7 +1,7 @@
 """Functions to be called from tic-tac-toe.main"""
 
 from os import remove, system
-from sys import exit, stdout
+from sys import exit
 from termcolor import colored
 from time import sleep
 import pickle

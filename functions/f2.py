@@ -1,7 +1,7 @@
 """Functions to be called from functions.f1 or above"""
 
 from os import remove, system
-from sys import exit, stdout
+from sys import exit
 from termcolor import colored
 from time import sleep
 import pickle
@@ -20,9 +20,9 @@ def ai_action(player, game):
   target = random.choice(possibilities)
   sleep(WAIT/2)
   for i in range(3):
-    print('.', end=''); stdout.flush(); sleep(WAIT/2)
-  print(f" {COLUMNS[target[0]].lower()}", end=''); stdout.flush(); sleep(WAIT/10)
-  print(target[1]+1, end=''); stdout.flush(); sleep(WAIT/3)
+    print('.', end='', flush=True); sleep(WAIT/2)
+  print(f" {COLUMNS[target[0]].lower()}", end='', flush=True); sleep(WAIT/10)
+  print(target[1]+1, end='', flush=True); sleep(WAIT/3)
   f3.place_mark(target, player, game)
 
 

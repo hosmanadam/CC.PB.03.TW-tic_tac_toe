@@ -1,7 +1,7 @@
 """Functions to be called from functions.f2 or above"""
 
 from os import remove, system
-from sys import exit, stdout
+from sys import exit
 from termcolor import colored
 from time import sleep
 import pickle
