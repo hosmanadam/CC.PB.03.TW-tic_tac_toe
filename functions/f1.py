@@ -118,7 +118,11 @@ def update_screen(player, game):
   system('clear')
   if game.winner == None:
     f2.print_scores(game.players, game.scores)
-    print('', *INSTRUCTIONS, sep='\n')
+    if game.players[player].lower() != 'ai':
+      print('', *INSTRUCTIONS, sep='\n')
+    else:
+      print('', *map(lambda x: colored(x, attrs=['dark']), INSTRUCTIONS), sep='\n') # AB: greyout (fancier)
+      # print('\n'*(len(INSTRUCTIONS)+1))                                           # AB: whiteout (cleaner)
     f2.print_board(game)
     # TODO: move to prompt_action() and take print_board out of the if-else
     print(colored(f"\n{game.players[player]}", COLORS[player], attrs=['bold']) +
