@@ -117,14 +117,14 @@ def update_screen(player, game):
   If match ended, omits instructions and prints result."""
   system('clear')
   if game.winner == None:
-    f2.print_scores(game.players, game.scores); print('')
-    print(INSTRUCTIONS)
+    f2.print_scores(game.players, game.scores)
+    print('', *INSTRUCTIONS, sep='\n')
     f2.print_board(game)
     # TODO: move to prompt_action() and take print_board out of the if-else
     print(colored(f"\n{game.players[player]}", COLORS[player], attrs=['bold']) +
                    ", make your move: ", end='')
   else:
-    print('\n'*5)
+    print('\n'*(len(INSTRUCTIONS)+2))
     f2.print_board(game)
     # print_win(player, game)
     if game.winner in (0, 1):

@@ -16,7 +16,8 @@ WELCOME_BACK = ("*** Welcome back to " + colored("Tic-tac-toe ", attrs=['bold'])
 GOODBYE = ("\n*** Thanks for playing. " + colored("Goodbye!", attrs=['bold']) +
            " ***")
 
-INSTRUCTIONS = ("Save game and exit: 's'\n"
-                "Exit without saving: 'q'\n" +
+INSTRUCTIONS = ("Undo last step: 'u'",
+                "Save game and exit: 's'",
+                "Exit without saving: 'q'",
                 colored("Place mark by entering its coordinates "
                         "(e.g. 'a1', 'c2'):\n", attrs=['bold']))

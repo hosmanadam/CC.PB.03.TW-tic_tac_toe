@@ -101,12 +101,15 @@ def print_scores(players, scores):
 
 def prompt_action(player, game, prompt=''):
   """Asks user to input coordinates. Handles 3 input cases (plus errors):
-  (1) `'s'` → `save()`
-  (2) `'q'` → `quit()`
-  (3) coordinates → `place_mark()`"""
+  (1) `'u'` → `game_undo()`
+  (2) `'s'` → `save()`
+  (3) `'q'` → `quit()`
+  (4) coordinates → `place_mark()`"""
   try:
     action = input(prompt)
-    if action.lower() == 's':
+    if action.lower() == 'u':
+      f3.game_undo(game)
+    elif action.lower() == 's':
       f3.game_save(game); sleep(WAIT/2)
       f3.quit()
     elif action.lower() == 'q':
