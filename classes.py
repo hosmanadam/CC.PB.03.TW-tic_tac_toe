@@ -9,6 +9,7 @@ class Game:
     self.players = None
     # Updated after every win
     self.scores = [0, 0]
+    self.round = 1
     self.winner = None
     self.winning_row = [] # (x, y) coordinates (to be indexed as board[y][x])
     # Updated after every step

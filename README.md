@@ -10,6 +10,11 @@ Here's some info about the code to aid everyone (including us) in not messing it
 ...are stored in tuples as `(x, y)`.
 Board indexing must be done as `board[y][x]` (notice reverse order).
 
+### Players
+Players are always represented as 0 or 1 in the game logic.
+This number is used to index all player-related attributes of game instance.
+Player names are only used for printing and to determine whether current player is AI.
+
 ### Function hierarchy
 Functions are always called top-to-bottom, for example:
 – `tic-tac-toe.main` may call functions defined in `f1`, `f2`, `f3`.

@@ -13,6 +13,16 @@ from classes import Game, SpotTakenError
 from functions import f2, f3
 
 
+def determine_next_player(game):
+  if len(game.steps[0]) == len(game.steps[1]):
+    return (game.round-1)%2
+  # TODO: simplify (`else: return index of longer one`)
+  elif len(game.steps[0]) < len(game.steps[1]):
+    return 0
+  else:
+    return 1
+
+
 def find_winning_row(player, game):
   """Returns coordinates of winning row, if found.
   Example: `[(0, 0), (0, 1), (0, 2)]` → corresponds to a1-a2-a3"""
@@ -64,6 +74,7 @@ def game_handle_match_end(player, game):
     game.scores[player] += 1
   else:
     game.winner = 'tie'
+  game.round += 1
   return game
 
 
@@ -97,12 +108,6 @@ def init_action(player, game):
     f2.ai_action(player, game)
   else:
     f2.prompt_action(player, game)
-
-
-def is_wrong_player(player, game):
-  """Checks if wrong player is coming up. Used to prevent 
-  loaded game from starting with last player again."""
-  return player == game.last_player
 
 
 def is_it_a_tie(steps, board_size):
