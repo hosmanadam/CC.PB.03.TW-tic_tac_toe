@@ -24,21 +24,21 @@ INSTRUCTIONS = ("Undo last step: 'u'",
 
 stop = game.winning_size-1
 SHAPES = {"ud": {"range_y": (0, game.board_size - stop),
-                "range_x": (0, game.board_size),
-                "step_y": 1,
-                "step_x": 0},
+                 "range_x": (0, game.board_size),
+                  "step_y": 1,
+                  "step_x": 0},
 
         "lr":   {"range_y": (0, game.board_size),
-                "range_x": (0, game.board_size - stop),
-                "step_y": 0,
-                "step_x": 1},
+                 "range_x": (0, game.board_size - stop),
+                  "step_y": 0,
+                  "step_x": 1},
 
         "ullr": {"range_y": (0, game.board_size - stop),
-                "range_x": (0, game.board_size - stop),
-                "step_y": 1,
-                "step_x": 1},
+                 "range_x": (0, game.board_size - stop),
+                  "step_y": 1,
+                  "step_x": 1},
 
         "urll": {"range_y": (0, game.board_size - stop),
-                "range_x": (2, game.board_size),
-                "step_y": 1,
-                "step_x": -1}}
+                 "range_x": (2, game.board_size),
+                  "step_y": 1,
+                  "step_x": -1}}
