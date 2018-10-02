@@ -45,7 +45,7 @@ BEFORE:
 
 
 AFTER:
-  In main(), after each step, uses find_best_rows() to:
+  After each place_mark(), main() uses find_best_rows() to:
 
     1.) analyze board 
 
@@ -53,16 +53,17 @@ AFTER:
         (with extension coordinates* and danger level**)
         Example: `[
                    {'danger': 2,
-                   'rows': [
-                            {'row': [(0, 1), (0, 2), (0, 3)], 'extension': [(0, 0), (0, 4)]},
-                            {'row': [(1, 1), (1, 2), (1, 3)], 'extension': [(1, 0), (1, 4)]}
-                           ]
+                    'rows': [
+                             {'row': [(0, 1), (0, 2), (0, 3)], 'extension': [(0, 0), (0, 4)]},
+                             {'row': [(1, 1), (1, 2), (1, 3)], 'extension': [(1, 0), (1, 4)]}
+                            ]
                    },
+
                    {'danger': 1,
-                   'rows': [
-                            {'row': [(3, 0), (3, 1), (3, 2), (3, 3)], 'extension': [(3, 4)]},
-                            {'row': [(5, 1), (5, 2), (5, 3), (5, 4)], 'extension': [(5, 0), (5, 5)]}
-                           ]
+                    'rows': [
+                             {'row': [(3, 0), (3, 1), (3, 2), (3, 3)], 'extension': [(3, 4)]},
+                             {'row': [(5, 1), (5, 2), (5, 3), (5, 4)], 'extension': [(5, 0), (5, 5)]}
+                            ]
                    }
         *  extension coordinates:  denote open positions immediately next to row on either side
         ** danger level:  integer value representing N steps away from winning row
