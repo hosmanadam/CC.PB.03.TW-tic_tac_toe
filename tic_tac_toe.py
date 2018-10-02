@@ -10,7 +10,7 @@ import random
 from constants import *
 from classes import Game, SpotTakenError
 
-from functions import f1, f2, f3
+from functions import f1, f2, f3, ai
 
 
 def main():
@@ -23,7 +23,7 @@ def main():
       while game.winner == None:
         player = f1.determine_next_player(game)
         f1.update_screen(player, game)
-        f1.init_action(player, game)     # AI stuff
+        f1.init_action(player, game)
         game.winning_row = f1.find_winning_row(player, game)
         game.last_player = player
         if game.winning_row or f1.is_it_a_tie(game.steps, game.board_size):

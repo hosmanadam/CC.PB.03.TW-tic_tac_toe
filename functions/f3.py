@@ -11,18 +11,6 @@ from constants import *
 from classes import Game, SpotTakenError
 
 
-# AI stuff
-def find_empty_coordinates(game):
-  """Returns all coordinates on board with value `EMPTY`.
-  Example: `[(0, 0), (0, 1), (0, 2)]` → corresponds to a1-a2-a3"""
-  empty_coordinates = []
-  for row in range(game.board_size):
-    for column in range(game.board_size):
-      if game.board[row][column] == EMPTY:
-        empty_coordinates.append((column, row))
-  return empty_coordinates
-
-
 def game_load():
   """Returns game instance from saved.pickle, then deletes file."""
   with open("saved.pickle", "rb") as file:

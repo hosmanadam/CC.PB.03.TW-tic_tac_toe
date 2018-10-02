@@ -10,7 +10,7 @@ import random
 from constants import *
 from classes import Game, SpotTakenError
 
-from functions import f2, f3
+from functions import f2, f3, ai
 
 
 def determine_next_player(game):
@@ -29,28 +29,7 @@ def determine_next_player(game):
 def find_winning_row(player, game):
   """Returns coordinates of winning row, if found.
   Example: `[(0, 0), (0, 1), (0, 2)]` → corresponds to a1-a2-a3"""
-  stop = game.winning_size-1
-  shapes = {"ud":   {"range_y": (0, game.board_size - stop),
-                     "range_x": (0, game.board_size),
-                      "step_y": 1,
-                      "step_x": 0},
-
-            "lr":   {"range_y": (0, game.board_size),
-                     "range_x": (0, game.board_size - stop),
-                      "step_y": 0,
-                      "step_x": 1},
-
-            "ullr": {"range_y": (0, game.board_size - stop),
-                     "range_x": (0, game.board_size - stop),
-                      "step_y": 1,
-                      "step_x": 1},
-
-            "urll": {"range_y": (0, game.board_size - stop),
-                     "range_x": (2, game.board_size),
-                      "step_y": 1,
-                      "step_x": -1}}
-
-  for shape in shapes.values():
+  for shape in SHAPES.values():
     for y in range(*shape["range_y"]):
       for x in range(*shape["range_x"]):
         row_coordinates = [((x + shape["step_x"]*i), (y + shape["step_y"]*i))
@@ -103,12 +82,11 @@ def game_welcome_setup(game):
   return game
 
 
-# AI stuff
 def init_action(player, game):
   """Decides whether human or AI is coming up.
   Calls prompt_action() or ai_action() accordingly."""
   if game.players[player].lower() == 'ai':  # both players can be AI
-    f2.ai_action(player, game)
+    ai.ai_action(player, game)
   else:
     f2.prompt_action(player, game)
 

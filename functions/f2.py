@@ -13,19 +13,6 @@ from classes import Game, SpotTakenError
 from functions import f3
 
 
-# AI stuff
-def ai_action(player, game):
-  """Prints AI 'thinking process' and places mark in random empty spot."""
-  possibilities = f3.find_empty_coordinates(game)
-  target = random.choice(possibilities)
-  sleep(WAIT/2)
-  for i in range(3):
-    print('.', end='', flush=True); sleep(WAIT/2)
-  print(f" {COLUMNS[target[0]].lower()}", end='', flush=True); sleep(WAIT/10)
-  print(target[1]+1, end='', flush=True); sleep(WAIT/3)
-  f3.place_mark(target, player, game)
-
-
 def generate_board(board_size):
   """Returns 0-index list matrix populated with value of `EMPTY`.
   Matrix is square shaped (both sides are `board_size` long)
