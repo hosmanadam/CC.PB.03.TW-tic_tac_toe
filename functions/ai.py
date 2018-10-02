@@ -38,14 +38,40 @@ def find_empty_coordinates(game):
 
 # ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ MAKING IT SMART ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓
 
+"""AI LOGIC
+
+before: ai_action gets empty spots and places mark in random one.
+after: after each step find_best_rows stores most dangerous rows of both players in
+           game.best_rows, with danger level attached.
+           if danger level 0 is found, call handle_match_end.
+       ai_action looks at game.best_rows.
+           if current players best row is better then or equal to opponent offensive
+           strategie is use. else defensive strategie is use.
+           
+
+
+danger level: a integer "N" representing "N" steps away from winning_row
+              0 means winning_row.
+              1 means 1 step away from winning_row.
+              2 means 2 step away from winning_row.
+              3 means 3 step away from winning_row.
+              4 means 4 step away from winning_row.
+              5 means 5 step away from winning_row.
+              6 means 6 step away from winning_row.
+
+            
+
+"""
+
 
 def assign_danger_level(row):
   """Analyze rows for highest danger/potential level for both players"""
   # Reuse winning_row functionality
   # Move duplicate logic to lower level function
 
-def find_best_row(player, game):
-  """Chooses coordinates with max value from assign_danger_level()"""
+def find_best_rows(player, game):
+  """returns coordinates of rows with highest danger level for both players.
+  example: [[player0bestrows][player1bestrows]]"""
 
 # ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑
 

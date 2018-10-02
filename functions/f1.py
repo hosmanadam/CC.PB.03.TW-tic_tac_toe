@@ -29,7 +29,27 @@ def determine_next_player(game):
 def find_winning_row(player, game):
   """Returns coordinates of winning row, if found.
   Example: `[(0, 0), (0, 1), (0, 2)]` → corresponds to a1-a2-a3"""
-  for shape in SHAPES.values():
+  stop = game.winning_size-1
+  shapes = {"ud": {"range_y": (0, game.board_size - stop),
+                   "range_x": (0, game.board_size),
+                    "step_y": 1,
+                    "step_x": 0},
+
+          "lr":   {"range_y": (0, game.board_size),
+                   "range_x": (0, game.board_size - stop),
+                    "step_y": 0,
+                    "step_x": 1},
+
+          "ullr": {"range_y": (0, game.board_size - stop),
+                   "range_x": (0, game.board_size - stop),
+                    "step_y": 1,
+                    "step_x": 1},
+
+          "urll": {"range_y": (0, game.board_size - stop),
+                   "range_x": (2, game.board_size),
+                    "step_y": 1,
+                    "step_x": -1}}
+  for shape in shapes.values():
     for y in range(*shape["range_y"]):
       for x in range(*shape["range_x"]):
         row_coordinates = [((x + shape["step_x"]*i), (y + shape["step_y"]*i))

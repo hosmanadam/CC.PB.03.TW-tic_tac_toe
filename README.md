@@ -16,10 +16,10 @@ This number is used to index all player-related attributes of game instance.
 Player names are only used for printing and to determine whether current player is AI.
 Players alternate in starting rounds, regardless of who won in the previous one.
 
-### Function hierarchy
+### Function hierarchy (under review)
 Functions are always called top-to-bottom, for example:
-– `tic-tac-toe.main` may call functions defined in `f1`, `f2`, `f3`.
-– functions in `f2` may only call functions in `f3`.
+– `tic-tac-toe.main` may call functions defined in `f1`, `f2`, `f3`, `ai`.
+– functions in `f2` may only call functions in `f3`, `ai`.
 In other words, functions in the same file/module may **not** call each other, or ones above them.
 
 A funcion may call functions more than 1 level below it.
@@ -29,4 +29,4 @@ In this case, when the lower function has siblings (ones that are very similar i
 Function definitions are listed alphabetically.
 
 ### Tagging
-Code lines related to AI functionality are tagged `# AI stuff` for easy finding.
+...
