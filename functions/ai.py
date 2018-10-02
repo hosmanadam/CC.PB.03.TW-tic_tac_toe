@@ -1,4 +1,4 @@
-"""Main module for Tic-tac-toe"""
+"""AI module for Tic-tac-toe"""
 
 from os import remove, system
 from sys import exit
@@ -38,28 +38,58 @@ def find_empty_coordinates(game):
 
 # ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ MAKING IT SMART ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓
 
-"""AI LOGIC
 
-before: ai_action gets empty spots and places mark in random one.
-after: after each step find_best_rows stores most dangerous rows of both players in
-           game.best_rows, with danger level attached.
-           if danger level 0 is found, call handle_match_end.
-       ai_action looks at game.best_rows.
-           if current players best row is better then or equal to opponent offensive
-           strategie is use. else defensive strategie is use.
-           
+"""
+BEFORE:
+  f2.ai_action() gets empty spots from find_empty_coordinates() and places mark in random one.
 
 
-danger level: a integer "N" representing "N" steps away from winning_row
-              0 means winning_row.
-              1 means 1 step away from winning_row.
-              2 means 2 step away from winning_row.
-              3 means 3 step away from winning_row.
-              4 means 4 step away from winning_row.
-              5 means 5 step away from winning_row.
-              6 means 6 step away from winning_row.
+AFTER:
+  In main(), after each step, uses find_best_rows() to:
 
-            
+    1.) analyze board 
+
+    2.) store most dangerous rows of both players in game.best_rows
+        (with extension coordinates* and danger level**)
+        Example: `[
+                   {'danger': 2,
+                   'rows': [
+                            {'row': [(0, 1), (0, 2), (0, 3)], 'extension': [(0, 0), (0, 4)]},
+                            {'row': [(1, 1), (1, 2), (1, 3)], 'extension': [(1, 0), (1, 4)]}
+                           ]
+                   },
+                   {'danger': 1,
+                   'rows': [
+                            {'row': [(3, 0), (3, 1), (3, 2), (3, 3)], 'extension': [(3, 4)]},
+                            {'row': [(5, 1), (5, 2), (5, 3), (5, 4)], 'extension': [(5, 0), (5, 5)]}
+                           ]
+                   }
+        *  extension coordinates:  denote open positions immediately next to row on either side
+        ** danger level:  integer value representing N steps away from winning row
+                          Examples:
+                            0: winning row
+                            1: one extension needed to become winning row
+
+
+  This information is later used in 2 places.
+
+    1.) find_winning_row() searches game.best_rows for danger level 0
+        if found:
+          handle_match_end()
+
+    2.) ai_action() looks at danger levels in game.best_rows
+        if AI's best row same/better level as opponent's:
+          place_mark(to extend opponent's row) # strategy: offensive
+        else:
+          place_mark(to extend AI's row)       # strategy: defensive
+
+INBOX
+  if same extension coordinate accompanies multiple rows:
+    choose that (2 birds, 1 stone)
+  else:
+    choose random
+
+  if no steps yet: place in middle
 
 """
 
@@ -73,52 +103,5 @@ def find_best_rows(player, game):
   """returns coordinates of rows with highest danger level for both players.
   example: [[player0bestrows][player1bestrows]]"""
 
+
 # ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑
-
-
-"""STRATEGY NOTES on 3 x 3
-
-computerMoves:
-    if computerStartsTheGame:
-
-    first step = center
-
-    if computerCanWin:
-        moveThere
-    elif playerCanWin:
-        moveThere
-
-    elif computerCanWin -1
-        moveNearby
-    elif playerCanWin -1
-        moveNearby
-
-    elif computerCanWin -2 
-        moveNearby
-    elif playerCanWin -2
-        moveNearby
-
-    if playerStartsTheGame:
-
-    if playerCanWin:
-    moveThere
-
-    elif computerCanWin:
-    moveThere
-
-    elif playerCanWin -1
-        moveNearby
-
-    elif computerCanWin -1
-        moveNearby
-
-    elif playerCanWin -2
-        moveNearby
-
-    elif computerCanWin -2
-        moveNearby
-
-
-computerCanWin = if it need 1 more mark to reach "isWinner"
-moveThere = winning row index + 1
-"""
