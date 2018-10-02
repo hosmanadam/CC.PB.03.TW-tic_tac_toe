@@ -14,9 +14,12 @@ from functions import f2, f3
 
 
 def determine_next_player(game):
+  """Chooses player and returns corresponding player number (`0` or `1`)."""
+  # if players have an equal number of steps, round starter will play
   if len(game.steps[0]) == len(game.steps[1]):
     return (game.round-1)%2
-  # TODO: simplify (`else: return index of longer one`)
+  # else, player with less steps will play
+  # TODO: simplify (`else: return index of shorter one`)
   elif len(game.steps[0]) < len(game.steps[1]):
     return 0
   else:
