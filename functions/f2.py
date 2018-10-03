@@ -38,8 +38,13 @@ def get_board_size(prompt="\nWhat size board (from 3-9) "
 def get_player_names():
   """Returns value of `players` from user inputs.
   Example: `['Adam', 'Dani']`"""
-  return [input("\nEnter Player 1 name: "), input("Enter Player 2 name: ")]
-  # TODO: don't allow empty input
+  names = ['', '']
+  for i in (0, 1):
+    while not names[i].strip():
+      names[i] = input(f"\nEnter Player {i+1} name: ")
+      if not names[i].strip():
+        print("\nYou have to enter a name!", end=''); sleep(WAIT/2)
+  return names
 
 
 def get_winning_size(board_size, prompt="How many marks in a row to win? "
