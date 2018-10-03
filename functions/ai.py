@@ -47,22 +47,22 @@ BEFORE:
 AFTER:
   After each place_mark(), main() uses find_best_rows() to:
 
-    1.) analyze board 
+    1.) analyze board
 
     2.) store most dangerous rows of both players in game.best_rows
         (with extension coordinates* and danger level**)
         Example: `[
                    {'danger': 2,
                     'rows': [
-                             {'row': [(0, 1), (0, 2), (0, 3)], 'extension': [(0, 0), (0, 4)]},
-                             {'row': [(1, 1), (1, 2), (1, 3)], 'extension': [(1, 0), (1, 4)]}
+                             {'row': [(0, 1), (0, 2), (0, 3)], 'extend': [(0, 0), (0, 4)]},
+                             {'row': [(1, 1), (1, 2), (1, 3)], 'extend': [(1, 0), (1, 4)]}
                             ]
                    },
 
                    {'danger': 1,
                     'rows': [
-                             {'row': [(3, 0), (3, 1), (3, 2), (3, 3)], 'extension': [(3, 4)]},
-                             {'row': [(5, 1), (5, 2), (5, 3), (5, 4)], 'extension': [(5, 0), (5, 5)]}
+                             {'row': [(3, 0), (3, 1), (3, 2), (3, 3)], 'extend': [(3, 4)]},
+                             {'row': [(5, 1), (5, 2), (5, 3), (5, 4)], 'extend': [(5, 0), (5, 5)]}
                             ]
                    }
         *  extension coordinates:  denote open positions immediately next to row on either side
@@ -72,7 +72,7 @@ AFTER:
                             1: one extension needed to become winning row
 
 
-  This information is later used in 2 places.
+  This information is later used in 2 places:
 
     1.) find_winning_row() searches game.best_rows for danger level 0
         if found:
@@ -85,12 +85,23 @@ AFTER:
           place_mark(to extend AI's row)       # strategy: defensive
 
 INBOX
-  if same extension coordinate accompanies multiple rows:
-    choose that (2 birds, 1 stone)
-  else:
-    choose random
+  Starting:
+    if no steps yet: place in middle
 
-  if no steps yet: place in middle
+  2 birds, 1 stone:
+    if same extension coordinate accompanies multiple rows:
+      prefer that
+    else:
+      choose random
+  
+  Think ahead:
+    def evaluate_situation(game.board):
+      just use analyze_board() again and see if danger levels are more/less preferable
+
+    if multiple steps seem equally good:
+      try hypothetical step
+      evaluate_situation(game.board)
+      is the situation better or worse?
 
 """
 
