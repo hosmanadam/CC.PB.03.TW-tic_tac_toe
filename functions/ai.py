@@ -25,10 +25,9 @@ def ai_action(player, game):
   f3.place_mark(target, player, game)
 
 
-def ai_in_players(player, game):
-  if game.players[player].lower() == 'ai':  # both players can be AI
-    return True
-  return False
+def player_is_ai(player, game):
+  """Returns True if passed player is AI."""
+  return game.players[player].lower() == 'ai'  # both players can be AI
 
 
 def find_empty_coordinates(game):

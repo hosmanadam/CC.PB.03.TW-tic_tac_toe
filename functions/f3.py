@@ -36,10 +36,11 @@ def game_undo(player, game):
   row = game.steps[game.last_player][-1][1]
   game.board[row][column] = EMPTY
   del game.steps[game.last_player][-1]
-  # if ai.ai_in_players(player, game):
+  # # undo twice if AI is playing
+  # # BUG: marks wrong player's last step after undo with AI
+  # if ai.player_is_ai(game.last_player, game):
   #   column = game.steps[player][-1][0]
   #   row = game.steps[player][-1][1]
-  #   print("Hello")
   #   game.board[row][column] = EMPTY
   #   del game.steps[player][-1]
   
