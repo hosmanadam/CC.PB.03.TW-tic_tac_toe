@@ -38,7 +38,7 @@ def game_undo(player, game):
   del game.steps[game.last_player][-1]
   # # undo twice if AI is playing
   # # BUG: marks wrong player's last step after undo with AI
-  # if ai.player_is_ai(game.last_player, game):
+  # if ai.is_player_ai(game.last_player, game):
   #   column = game.steps[player][-1][0]
   #   row = game.steps[player][-1][1]
   #   game.board[row][column] = EMPTY
