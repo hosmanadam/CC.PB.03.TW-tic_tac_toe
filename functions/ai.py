@@ -25,6 +25,12 @@ def ai_action(player, game):
   f3.place_mark(target, player, game)
 
 
+def ai_in_players(player, game):
+  if game.players[player].lower() == 'ai':  # both players can be AI
+    return True
+  return False
+
+
 def find_empty_coordinates(game):
   """Returns all coordinates on board with value `EMPTY`.
   Example: `[(0, 0), (0, 1), (0, 2)]` → corresponds to a1-a2-a3"""

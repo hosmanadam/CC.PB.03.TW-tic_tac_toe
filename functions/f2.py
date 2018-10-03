@@ -95,7 +95,7 @@ def prompt_action(player, game, prompt=''):
   try:
     action = input(prompt)
     if action.lower() == 'u':
-      f3.game_undo(game)
+      f3.game_undo(player, game)
     elif action.lower() == 's':
       f3.game_save(game); sleep(WAIT/2)
       f3.quit()

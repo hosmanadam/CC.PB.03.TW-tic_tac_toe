@@ -10,6 +10,8 @@ import random
 from constants import *
 from classes import Game, SpotTakenError
 
+from functions import ai
+
 
 def game_load():
   """Returns game instance from saved.pickle, then deletes file."""
@@ -27,14 +29,20 @@ def game_save(game):
   print("Game has been saved.")
 
 
-def game_undo(game):
+def game_undo(player, game):
   """Removes last mark from game.board, and
   deletes corresponding coordinates from game.steps."""
   column = game.steps[game.last_player][-1][0]
   row = game.steps[game.last_player][-1][1]
   game.board[row][column] = EMPTY
   del game.steps[game.last_player][-1]
-
+  # if ai.ai_in_players(player, game):
+  #   column = game.steps[player][-1][0]
+  #   row = game.steps[player][-1][1]
+  #   print("Hello")
+  #   game.board[row][column] = EMPTY
+  #   del game.steps[player][-1]
+  
 
 def place_mark(coordinates, player, game):
   """Places player's mark at passed coordinate.

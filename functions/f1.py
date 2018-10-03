@@ -105,7 +105,7 @@ def game_welcome_setup(game):
 def init_action(player, game):
   """Decides whether human or AI is coming up.
   Calls prompt_action() or ai_action() accordingly."""
-  if game.players[player].lower() == 'ai':  # both players can be AI
+  if ai.ai_in_players(player, game):
     ai.ai_action(player, game)
   else:
     f2.prompt_action(player, game)
