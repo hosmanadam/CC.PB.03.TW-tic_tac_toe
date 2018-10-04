@@ -7,7 +7,7 @@ class Game:
     self.board_size = None
     self.winning_size = None
     self.players = None
-    # Updated after every win
+    # Updated after every match end
     self.scores = [0, 0]
     self.round = 1
     self.winner = None
@@ -15,6 +15,7 @@ class Game:
     # Updated after every step
     self.board = []
     self.steps = []       # (x, y) coordinates (to be indexed as board[y][x])
+    self.player = 0
     self.last_player = 1
     self.loaded_now = False
 

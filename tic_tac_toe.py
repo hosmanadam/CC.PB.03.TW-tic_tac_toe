@@ -21,14 +21,15 @@ def main():
     while wants_to_play:
       game = f1.game_new_round(game)
       while game.winner == None:
-        player = f1.determine_next_player(game)
-        f1.update_screen(player, game)
-        f1.init_action(player, game)
-        game.winning_row = f1.find_winning_row(player, game)
-        game.last_player = player
+        game.player = f1.determine_next_player(game)
+        f1.update_screen(game.player, game)
+        print(game.last_player, game.player)
+        f1.init_action(game.player, game)
+        game.winning_row = f1.find_winning_row(game.player, game)
+        game.last_player = game.player
         if game.winning_row or f1.is_it_a_tie(game.steps, game.board_size):
-          game = f1.game_handle_match_end(player, game)
-          f1.update_screen(player, game)
+          game = f1.game_handle_match_end(game.player, game)
+          f1.update_screen(game.player, game)
           wants_to_play = f1.wants_rematch()
           break
     f3.quit()

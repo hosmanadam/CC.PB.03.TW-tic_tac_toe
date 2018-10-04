@@ -55,7 +55,7 @@ def find_winning_row(player, game):
         row_coordinates = [((x + shape["step_x"]*i), (y + shape["step_y"]*i))
                            for i in range(game.winning_size)]
         row_marks = [game.board[xy[1]][xy[0]] for xy in row_coordinates]
-        would_win = [MARKS[player]]*game.winning_size
+        would_win = [MARKS[game.player]]*game.winning_size
         if row_marks == would_win:
           return row_coordinates
 
@@ -72,8 +72,8 @@ def game_create():
 def game_handle_match_end(player, game):
   """Updates `winner` and `scores` based on what's up."""
   if game.winning_row:
-    game.winner = player
-    game.scores[player] += 1
+    game.winner = game.player
+    game.scores[game.player] += 1
   else:
     game.winner = 'tie'
   game.round += 1
@@ -124,22 +124,22 @@ def update_screen(player, game):
   system('clear')
   if game.winner == None:
     f2.print_scores(game.players, game.scores)
-    if game.players[player].lower() != 'ai':
+    if game.players[game.player].lower() != 'ai':
       print('', *INSTRUCTIONS, sep='\n')
     else:
       print('', *map(lambda x: colored(x, attrs=['dark']), INSTRUCTIONS), sep='\n') # AB: greyout (fancier)
       # print('\n'*(len(INSTRUCTIONS)+1))                                           # AB: whiteout (cleaner)
     f2.print_board(game)
     # TODO: move to prompt_action() and take print_board out of the if-else
-    print(colored(f"\n{game.players[player]}", COLORS[player], attrs=['bold']) +
+    print(colored(f"\n{game.players[game.player]}", COLORS[game.player], attrs=['bold']) +
                    ", make your move: ", end='')
   else:
     print('\n'*(len(INSTRUCTIONS)+2))
     f2.print_board(game)
     # print_win(player, game)
     if game.winner in (0, 1):
-      print(colored(f"\n{game.players[player]} wins in {len(game.steps[player])} "
-                     "steps!", COLORS[player], attrs=['bold'])); sleep(WAIT)
+      print(colored(f"\n{game.players[game.player]} wins in {len(game.steps[game.player])} "
+                     "steps!", COLORS[game.player], attrs=['bold'])); sleep(WAIT)
     # print_tie(player, game)
     elif game.winner == 'tie':
       print(colored("\nIt's a tie!", attrs=['bold'])); sleep(WAIT)

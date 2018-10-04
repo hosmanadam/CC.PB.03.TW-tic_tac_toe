@@ -25,8 +25,8 @@ def ai_action(player, game):
   f3.place_mark(target, player, game)
 
 
-def is_player_ai(player, game):
-  """Returns True if passed player is AI."""
+def is_player_ai(player, game): # NOTE: player name is confuseing
+  """Returns True if passed player is AI, else False."""
   return game.players[player].lower() == 'ai'  # both players can be AI
 
 

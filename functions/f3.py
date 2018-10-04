@@ -36,14 +36,15 @@ def game_undo(player, game):
   row = game.steps[game.last_player][-1][1]
   game.board[row][column] = EMPTY
   del game.steps[game.last_player][-1]
-  # # undo twice if AI is playing
-  # # BUG: marks wrong player's last step after undo with AI
-  # if ai.is_player_ai(game.last_player, game):
-  #   column = game.steps[player][-1][0]
-  #   row = game.steps[player][-1][1]
-  #   game.board[row][column] = EMPTY
-  #   del game.steps[player][-1]
-  
+  # undo twice if AI is playing
+  # BUG: marks wrong player's last step after undo with AI
+  # game.last_player is set wrong?
+  if ai.is_player_ai(game.last_player, game):
+    column = game.steps[game.player][-1][0]
+    row = game.steps[game.player][-1][1]
+    game.board[row][column] = EMPTY
+    del game.steps[game.player][-1]
+
 
 def place_mark(coordinates, player, game):
   """Places player's mark at passed coordinate.
@@ -53,8 +54,8 @@ def place_mark(coordinates, player, game):
   if row < 0:
     raise IndexError
   if game.board[row][column] == EMPTY:
-    game.board[row][column] = MARKS[player]
-    game.steps[player].append((column, row))
+    game.board[row][column] = MARKS[game.player]
+    game.steps[game.player].append((column, row))
   else:
     raise SpotTakenError
 
