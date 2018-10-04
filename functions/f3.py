@@ -29,7 +29,7 @@ def game_save(game):
   print("Game has been saved.")
 
 
-def game_undo(player, game):
+def game_undo(game):
   """Removes last mark from game.board, and
   deletes corresponding coordinates from game.steps."""
   column = game.steps[game.last_player][-1][0]
@@ -46,7 +46,7 @@ def game_undo(player, game):
     del game.steps[game.player][-1]
 
 
-def place_mark(coordinates, player, game):
+def place_mark(coordinates, game):
   """Places player's mark at passed coordinate.
   Example input coordinates: `'a4'` → `board[3][0]`"""
   row = coordinates[1]

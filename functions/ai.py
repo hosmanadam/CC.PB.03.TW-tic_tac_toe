@@ -13,7 +13,7 @@ from classes import Game, SpotTakenError
 from functions import f3
 
 
-def ai_action(player, game):
+def ai_action(game):
   """Prints AI 'thinking process' and places mark in random empty spot."""
   possibilities = find_empty_coordinates(game)
   target = random.choice(possibilities)
@@ -22,10 +22,10 @@ def ai_action(player, game):
     print('.', end='', flush=True); sleep(WAIT/2)
   print(f" {COLUMNS[target[0]].lower()}", end='', flush=True); sleep(WAIT/10)
   print(target[1]+1, end='', flush=True); sleep(WAIT/3)
-  f3.place_mark(target, player, game)
+  f3.place_mark(target, game)
 
 
-def is_player_ai(player, game): # NOTE: player name is confuseing
+def is_player_ai(player, game): # NOTE: player name is confusing
   """Returns True if passed player is AI, else False."""
   return game.players[player].lower() == 'ai'  # both players can be AI
 
@@ -116,7 +116,7 @@ def assign_danger_level(row):
   # Reuse winning_row functionality
   # Move duplicate logic to lower level function
 
-def find_best_rows(player, game):
+def find_best_rows(game):
   """returns coordinates of rows with highest danger level for both players.
   example: [[player0bestrows][player1bestrows]]"""
 

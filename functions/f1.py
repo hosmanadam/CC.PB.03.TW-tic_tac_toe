@@ -26,7 +26,7 @@ def determine_next_player(game):
     return 1
 
 
-def find_winning_row(player, game):
+def find_winning_row(game):
   """Returns coordinates of winning row, if found.
   Example: `[(0, 0), (0, 1), (0, 2)]` → corresponds to a1-a2-a3"""
   stop = game.winning_size-1
@@ -69,7 +69,7 @@ def game_create():
   return game
 
 
-def game_handle_match_end(player, game):
+def game_handle_match_end(game):
   """Updates `winner` and `scores` based on what's up."""
   if game.winning_row:
     game.winner = game.player
@@ -102,13 +102,13 @@ def game_welcome_setup(game):
   return game
 
 
-def init_action(player, game):
+def init_action(game):
   """Decides whether human or AI is coming up.
   Calls prompt_action() or ai_action() accordingly."""
-  if ai.is_player_ai(player, game):
-    ai.ai_action(player, game)
+  if ai.is_player_ai(game.player, game):
+    ai.ai_action(game)
   else:
-    f2.prompt_action(player, game)
+    f2.prompt_action(game)
 
 
 def is_it_a_tie(steps, board_size):
@@ -118,7 +118,7 @@ def is_it_a_tie(steps, board_size):
     return True
 
 
-def update_screen(player, game):
+def update_screen(game):
   """Clears screen. Prints scores, instructions and board if match is ongoing.
   If match ended, omits instructions and prints result."""
   system('clear')
@@ -136,11 +136,11 @@ def update_screen(player, game):
   else:
     print('\n'*(len(INSTRUCTIONS)+2))
     f2.print_board(game)
-    # print_win(player, game)
+    # print_win(game)
     if game.winner in (0, 1):
       print(colored(f"\n{game.players[game.player]} wins in {len(game.steps[game.player])} "
                      "steps!", COLORS[game.player], attrs=['bold'])); sleep(WAIT)
-    # print_tie(player, game)
+    # print_tie(game)
     elif game.winner == 'tie':
       print(colored("\nIt's a tie!", attrs=['bold'])); sleep(WAIT)
     f2.print_scores(game.players, game.scores); sleep(WAIT)

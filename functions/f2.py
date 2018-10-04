@@ -91,7 +91,7 @@ def print_scores(players, scores):
         colored(f"{scores[1]}", COLORS[1]))
 
 
-def prompt_action(player, game, prompt=''):
+def prompt_action(game, prompt=''):
   """Asks user to input coordinates. Handles 3 input cases (plus errors):
   (1) `'u'` → `game_undo()`
   (2) `'s'` → `save()`
@@ -100,7 +100,7 @@ def prompt_action(player, game, prompt=''):
   try:
     action = input(prompt)
     if action.lower() == 'u':
-      f3.game_undo(player, game)
+      f3.game_undo(game)
     elif action.lower() == 's':
       f3.game_save(game); sleep(WAIT/2)
       f3.quit()
@@ -110,16 +110,13 @@ def prompt_action(player, game, prompt=''):
       row = int(action[1:])-1
       column = COLUMNS.index(action[0].upper())
       coordinates = (column, row)
-      f3.place_mark(coordinates, player, game)
+      f3.place_mark(coordinates, game)
   except IndexError:
-    prompt_action(player, game,
-                  prompt="Coordinates out of range. Try again: ")
+    prompt_action(game, prompt="Coordinates out of range. Try again: ")
   except ValueError:
-    prompt_action(player, game,
-                  prompt="Incorrectly formatted coordinates. Try again: ")
+    prompt_action(game, prompt="Incorrectly formatted coordinates. Try again: ")
   except SpotTakenError:
-    prompt_action(player, game,
-                  prompt="That spot is already taken. Try again: ")
+    prompt_action(game, prompt="That spot is already taken. Try again: ")
 
 
 def welcome_start(loaded_now):
