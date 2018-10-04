@@ -21,9 +21,8 @@ def main():
     while wants_to_play:
       game = f1.game_new_round(game)
       while game.winner == None:
-        game.player = f1.determine_next_player(game)
+        game.player, game.last_player = f1.determine_players(game)
         f1.update_screen(game)
-        print(game.last_player, game.player) # BUG TESTING
         f1.init_action(game)
         game.winning_row = f1.find_winning_row(game)
         if game.winning_row or f1.is_it_a_tie(game.steps, game.board_size):

@@ -15,8 +15,8 @@ class Game:
     # Updated after every step
     self.board = []
     self.steps = []       # (x, y) coordinates (to be indexed as board[y][x])
-    self.player = 0
-    self.last_player = 1
+    self.player = None
+    self.last_player = None
     self.loaded_now = False
 
 class SpotTakenError(Exception):

@@ -37,9 +37,7 @@ def game_undo(game):
   game.board[row][column] = EMPTY
   del game.steps[game.last_player][-1]
   # undo twice if AI is playing
-  # BUG: marks wrong player's last step after undo with AI
-  # game.last_player is set wrong?
-  if ai.is_player_ai(game.last_player, game):
+  if ai.is_player_ai(game.last_player, game): # TODO: check last_player
     column = game.steps[game.player][-1][0]
     row = game.steps[game.player][-1][1]
     game.board[row][column] = EMPTY
@@ -56,7 +54,6 @@ def place_mark(coordinates, game):
   if game.board[row][column] == EMPTY:
     game.board[row][column] = MARKS[game.player]
     game.steps[game.player].append((column, row))
-    game.last_player = game.player
   else:
     raise SpotTakenError
 
@@ -74,14 +71,16 @@ def print_rows(game):
   for row in range(game.board_size):
     print(str(row+1) + ' ', end='')
     for place in range(game.board_size):
-      if game.winner in (0, 1) and (place, row) in game.winning_row: # mark as winning row
+      if game.winner in (0, 1) and (place, row) in game.winning_row:  # mark as winning row
         print(colored(game.board[row][place], attrs=['bold']) +
               colored('←', 'blue', attrs=['bold']), end='')
-      elif (game.winner == None and game.steps[game.last_player]          # mark as last step
+      elif (game.winner not in (0, 1)                                 # mark as last step
+            and game.last_player in (0, 1)
+            and game.steps[game.last_player]
             and (place, row) == game.steps[game.last_player][-1]):
         print(colored(game.board[row][place], attrs=['bold']) + 
               colored('←', 'blue', attrs=['bold']), end='')
-      else:                                                          # print w/o marking
+      else:                                                           # print w/o marking
         print(colored(game.board[row][place], attrs=['bold']) + ' ', end='')
     print(str(row+1))
 

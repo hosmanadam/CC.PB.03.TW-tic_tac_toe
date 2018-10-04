@@ -11,10 +11,13 @@ Here's some info about the code to aid everyone (including us) in not messing it
 Board indexing must be done as `board[y][x]` (notice reverse order).
 
 ### Players
-Players are always represented as 0 or 1 in the game logic.
+Players are always represented as `0` or `1` in the game logic.
 This number is used to index all player-related attributes of game instance.
 Player names are only used for printing and to determine whether current player is AI.
 Players alternate in starting rounds, regardless of who won in the previous one.
+`Game.player` is the player currently in control.
+`Game.last_player` is the player with the last mark on current board.
+`Game.player` and `Game.last_player` can never be the same (disregarding that technically, after undo, you are the one who performed the last action, and will also perform the next).
 
 ### Function hierarchy (under review)
 Functions are always called top-to-bottom, for example:
