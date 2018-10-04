@@ -56,6 +56,7 @@ def place_mark(coordinates, game):
   if game.board[row][column] == EMPTY:
     game.board[row][column] = MARKS[game.player]
     game.steps[game.player].append((column, row))
+    game.last_player = game.player
   else:
     raise SpotTakenError
 
