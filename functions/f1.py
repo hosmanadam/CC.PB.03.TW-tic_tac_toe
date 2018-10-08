@@ -28,7 +28,7 @@ from functions import f2, f3, ai
 
 def determine_players(game):
   """Chooses players and returns corresponding player numbers in a tuple.
-  Example: (0, 1)"""
+  Example: `(0, 1)`"""
   # if players have an equal number of steps, round starter will play
   if len(game.steps[0]) == len(game.steps[1]):
     return ((game.round-1)%2, (game.round)%2)
@@ -75,7 +75,7 @@ def find_winning_row(game):
 
 
 def game_create():
-  """Returns Game instance from load, else new."""
+  """Returns `Game` instance from load, else new."""
   try:
     game = f3.game_load()
   except FileNotFoundError:
@@ -84,7 +84,7 @@ def game_create():
 
 
 def game_handle_match_end(game):
-  """Updates `winner` and `scores` based on what's up."""
+  """Updates `game.winner` and `game.scores` based on what's up."""
   if game.winning_row:
     game.winner = game.player
     game.scores[game.player] += 1
@@ -118,7 +118,7 @@ def game_welcome_setup(game):
 
 def init_action(game):
   """Decides whether human or AI is coming up.
-  Calls prompt_action() or ai_action() accordingly."""
+  Calls `prompt_action()` or `ai_action()` accordingly."""
   if ai.is_player_ai(game.player, game):
     ai.ai_action(game)
   else:
@@ -126,10 +126,8 @@ def init_action(game):
 
 
 def is_it_a_tie(steps, board_size):
-  """Returns `True` if board is full"""
-  if len(steps[0]) + len(steps[1]) == board_size**2:
-  # TODO: rewrite to analyze board instead
-    return True
+  """Returns `True` if board is full, else `False`"""
+  return len(steps[0]) + len(steps[1]) == board_size**2:
 
 
 def update_screen(game):

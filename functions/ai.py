@@ -26,7 +26,7 @@ def ai_action(game):
 
 
 def is_player_ai(player, game): # NOTE: player name is confusing
-  """Returns True if passed player is AI, else False."""
+  """Returns `True` if passed player is AI, else `False`."""
   return game.players[player].lower() == 'ai'  # both players can be AI
 
 
