@@ -29,7 +29,7 @@ def main():
         if game.winning_row or f1.is_it_a_tie(game.steps, game.board_size):
           game = f1.game_handle_match_end(game)
           f1.update_screen(game)
-          wants_to_play = f1.wants_rematch()
+          wants_to_play = f1.wants_rematch(game)
           break
     f3.quit()
   except KeyboardInterrupt:

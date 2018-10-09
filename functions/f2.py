@@ -41,7 +41,7 @@ def get_board_size(prompt="\nWhat size board (from 3-9) "
 
 from functools import wraps	
 def handle_input_errors(fn):
-  """This decorator will be responsible for the general logic of
+  """This decorator WILL BE responsible for the general logic of
   error handling user inputs.
   Planned functionality:
     Looks at what function called it
@@ -60,8 +60,7 @@ def handle_input_errors(fn):
 
 @handle_input_errors
 def get_player_names(player, retry=False):
-  """Returns name of `player` from user input.
-  Example: 'Adam'`"""
+  """Returns player name from user input. Example: `'Adam'`"""
   name = ''
   while not name.strip():
     name = input(f"\nEnter Player {player+1} name: ")

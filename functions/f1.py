@@ -147,16 +147,17 @@ def update_screen(game):
     f2.print_scores(game.players, game.scores); sleep(WAIT)
 
 
-def wants_rematch(prompt=colored("\nWould you like to play another round?",
-                                 attrs=['bold']) + " (y/n) "):
+def wants_rematch(game, prompt=colored("\nWould you like to play another round?",
+                                       attrs=['bold']) + " (y/n) "):
   """Asks user if they want to play again and returns `True` or `False` based on input."""
-  intention = input(prompt)
-  try:
-    if intention.lower()[0] == "n":
-      return False
-    if intention.lower()[0] == "y":
-      return True
-  except IndexError:
-    return wants_rematch(prompt="Type something please: ")
-  return wants_rematch(prompt="Say again? ")
+  command = input(prompt)
+  if not f3.handle_exit_commands(game, command):
+    try:
+      if command.lower()[0] == "n":
+        return False
+      if command.lower()[0] == "y":
+        return True
+    except IndexError:
+      return wants_rematch(prompt="Type something please: ")
+    return wants_rematch(prompt="Say again? ")
   
