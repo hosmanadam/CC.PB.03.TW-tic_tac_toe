@@ -36,16 +36,53 @@ def get_board_size(prompt="\nWhat size board (from 3-9) "
   return board_size
 
 
-def get_player_names():
-  """Returns value of `players` from user inputs.
-  Example: `['Adam', 'Dani']`"""
-  names = ['', '']
-  for i in (0, 1):
-    while not names[i].strip():
-      names[i] = input(f"\nEnter Player {i+1} name: ")
-      if not names[i].strip():
-        print("\nYou have to enter a name!", end=''); sleep(WAIT/2)
-  return names
+# ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓ ↓
+
+
+from functools import wraps	
+def handle_input_errors(fn):
+  """This decorator will be responsible for the general logic of
+  error handling user inputs.
+  Planned functionality:
+    Looks at what function called it
+    Looks at the output of the function
+    Cross-checks output with expected RegEx in dictionary
+    if match OK, returns result
+    else, looks for typical errors in dictionary
+      if found, displays specific error message and calls function again with `retry=True`
+      else, displays general error message"""
+  @wraps(fn)
+  def wrapper(*args, **kwargs):
+    result = fn(*args, **kwargs)
+    return result
+  return wrapper
+
+
+@handle_input_errors
+def get_player_names(player, retry=False):
+  """Returns value of `player` from user input.
+  Example: 'Adam'`"""
+  name = ''
+  while not name.strip():
+    name = input(f"\nEnter Player {player+1} name: ")
+    if not name.strip():
+      print("\nYou have to enter a name!", end=''); sleep(WAIT/2)
+  return name
+
+
+# ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑ ↑
+
+
+# def get_player_names():
+#   """Returns value of `players` from user inputs.
+#   Example: `['Adam', 'Dani']`"""
+#   names = ['', '']
+#   for i in (0, 1):
+#     while not names[i].strip():
+#       names[i] = input(f"\nEnter Player {i+1} name: ")
+#       if not names[i].strip():
+#         print("\nYou have to enter a name!", end=''); sleep(WAIT/2)
+#   return names
 
 
 def get_winning_size(board_size, prompt="How many marks in a row to win? "

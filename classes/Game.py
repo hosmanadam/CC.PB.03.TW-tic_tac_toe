@@ -4,7 +4,7 @@ class Game:
     # Fixed at `game_new()`
     self.board_size = None
     self.winning_size = None
-    self.players = None
+    self.players = [None, None]
     # Updated after every match end
     self.scores = [0, 0]
     self.round = 1

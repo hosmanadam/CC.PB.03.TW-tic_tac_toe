@@ -112,7 +112,8 @@ def game_welcome_setup(game):
   if not game.loaded_now:
     game.board_size = f2.get_board_size()
     game.winning_size = f2.get_winning_size(game.board_size)
-    game.players = f2.get_player_names()
+    game.players[0] = f2.get_player_names(player=0)
+    game.players[1] = f2.get_player_names(player=1)
   f2.welcome_end(game.loaded_now)
   return game
 
