@@ -99,8 +99,8 @@ def game_welcome_setup(game):
   if not game.loaded_now:
     game.board_size = f2.get_board_size()
     game.winning_size = f2.get_winning_size(game.board_size)
-    game.players[0] = f2.get_player_names(player=0)
-    game.players[1] = f2.get_player_names(player=1)
+    game.player_names[0] = f2.get_player_names(player=0)
+    game.player_names[1] = f2.get_player_names(player=1)
   f2.welcome_end(game.loaded_now)
   return game
 
@@ -124,27 +124,27 @@ def update_screen(game):
   If match ended, omits instructions and prints result."""
   system('clear')
   if game.winner == None:
-    f2.print_scores(game.players, game.scores)
-    if game.players[game.player].lower() != 'ai':
+    f2.print_scores(game.player_names, game.scores)
+    if game.player_names[game.player].lower() != 'ai':
       print('', *INSTRUCTIONS, sep='\n')
     else:
       print('', *map(lambda x: colored(x, attrs=['dark']), INSTRUCTIONS), sep='\n') # AB: greyout (fancier)
       # print('\n'*(len(INSTRUCTIONS)+1))                                           # AB: whiteout (cleaner)
     f2.print_board(game)
     # TODO: move to prompt_action() and take print_board out of the if-else
-    print(colored(f"\n{game.players[game.player]}", COLORS[game.player], attrs=['bold']) +
+    print(colored(f"\n{game.player_names[game.player]}", COLORS[game.player], attrs=['bold']) +
                    ", make your move: ", end='')
   else:
     print('\n'*(len(INSTRUCTIONS)+2))
     f2.print_board(game)
     # print_win(game)
     if game.winner in (0, 1):
-      print(colored(f"\n{game.players[game.player]} wins in {len(game.steps[game.player])} "
+      print(colored(f"\n{game.player_names[game.player]} wins in {len(game.steps[game.player])} "
                      "steps!", COLORS[game.player], attrs=['bold'])); sleep(WAIT)
     # print_tie(game)
     elif game.winner == 'tie':
       print(colored("\nIt's a tie!", attrs=['bold'])); sleep(WAIT)
-    f2.print_scores(game.players, game.scores); sleep(WAIT)
+    f2.print_scores(game.player_names, game.scores); sleep(WAIT)
 
 
 def wants_rematch(game, prompt=colored("\nWould you like to play another round?",
