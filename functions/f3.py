@@ -8,7 +8,8 @@ import pickle
 import random
 
 from constants import *
-from classes import Game, SpotTakenError
+from classes.Game import Game
+from classes.SpotTakenError import SpotTakenError
 
 from functions import ai
 

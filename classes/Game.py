@@ -1,5 +1,3 @@
-"""All classes for Tic-tac-toe."""
-
 class Game:
   """Contains all game variables."""
   def __init__(self):
@@ -18,7 +16,3 @@ class Game:
     self.player = None
     self.last_player = None
     self.loaded_now = False
-
-class SpotTakenError(Exception):
-  def __init__(self):
-    pass
