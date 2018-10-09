@@ -127,7 +127,7 @@ def init_action(game):
 
 def is_it_a_tie(steps, board_size):
   """Returns `True` if board is full, else `False`"""
-  return len(steps[0]) + len(steps[1]) == board_size**2:
+  return len(steps[0]) + len(steps[1]) == board_size**2
 
 
 def update_screen(game):
