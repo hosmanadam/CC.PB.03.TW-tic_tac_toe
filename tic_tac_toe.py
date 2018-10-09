@@ -22,7 +22,7 @@ def main():
     while wants_to_play:
       game = f1.game_new_round(game)
       while game.winner == None:
-        game.player, game.last_player = f1.determine_players(game)
+        game.current_player, game.last_player = f1.determine_players(game)
         f1.update_screen(game)
         f1.init_action(game)
         game.winning_row = f1.find_winning_row(game)

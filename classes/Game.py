@@ -13,6 +13,6 @@ class Game:
     # Updated after every step
     self.board = []
     self.steps = []       # (x, y) coordinates (to be indexed as board[y][x])
-    self.player = None
+    self.current_player = None
     self.last_player = None
     self.loaded_now = False

@@ -57,7 +57,7 @@ def find_winning_row(game):
         row_coordinates = [((x + shape["step_x"]*i), (y + shape["step_y"]*i))
                            for i in range(game.winning_size)]
         row_marks = [game.board[xy[1]][xy[0]] for xy in row_coordinates]
-        would_win = [MARKS[game.player]]*game.winning_size
+        would_win = [MARKS[game.current_player]]*game.winning_size
         if row_marks == would_win:
           return row_coordinates
 
@@ -74,8 +74,8 @@ def game_create():
 def game_handle_match_end(game):
   """Updates `game.winner` and `game.scores` based on what's up."""
   if game.winning_row:
-    game.winner = game.player
-    game.scores[game.player] += 1
+    game.winner = game.current_player
+    game.scores[game.current_player] += 1
   else:
     game.winner = 'tie'
   game.round += 1
@@ -108,7 +108,7 @@ def game_welcome_setup(game):
 def init_action(game):
   """Decides whether human or AI is coming up.
   Calls `prompt_action()` or `ai_action()` accordingly."""
-  if ai.is_player_ai(game.player, game):
+  if ai.is_player_ai(game.current_player, game):
     ai.ai_action(game)
   else:
     f2.prompt_action(game)
@@ -125,22 +125,22 @@ def update_screen(game):
   system('clear')
   if game.winner == None:
     f2.print_scores(game.player_names, game.scores)
-    if game.player_names[game.player].lower() != 'ai':
+    if game.player_names[game.current_player].lower() != 'ai':
       print('', *INSTRUCTIONS, sep='\n')
     else:
       print('', *map(lambda x: colored(x, attrs=['dark']), INSTRUCTIONS), sep='\n') # AB: greyout (fancier)
       # print('\n'*(len(INSTRUCTIONS)+1))                                           # AB: whiteout (cleaner)
     f2.print_board(game)
     # TODO: move to prompt_action() and take print_board out of the if-else
-    print(colored(f"\n{game.player_names[game.player]}", COLORS[game.player], attrs=['bold']) +
+    print(colored(f"\n{game.player_names[game.current_player]}", COLORS[game.current_player], attrs=['bold']) +
                    ", make your move: ", end='')
   else:
     print('\n'*(len(INSTRUCTIONS)+2))
     f2.print_board(game)
     # print_win(game)
     if game.winner in (0, 1):
-      print(colored(f"\n{game.player_names[game.player]} wins in {len(game.steps[game.player])} "
-                     "steps!", COLORS[game.player], attrs=['bold'])); sleep(WAIT)
+      print(colored(f"\n{game.player_names[game.current_player]} wins in {len(game.steps[game.current_player])} "
+                     "steps!", COLORS[game.current_player], attrs=['bold'])); sleep(WAIT)
     # print_tie(game)
     elif game.winner == 'tie':
       print(colored("\nIt's a tie!", attrs=['bold'])); sleep(WAIT)

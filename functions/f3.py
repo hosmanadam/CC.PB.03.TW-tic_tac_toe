@@ -39,10 +39,10 @@ def game_undo(game):
   del game.steps[game.last_player][-1]
   # undo twice if AI is playing
   if ai.is_player_ai(game.last_player, game): # TODO: check last_player
-    column = game.steps[game.player][-1][0]
-    row = game.steps[game.player][-1][1]
+    column = game.steps[game.current_player][-1][0]
+    row = game.steps[game.current_player][-1][1]
     game.board[row][column] = EMPTY
-    del game.steps[game.player][-1]
+    del game.steps[game.current_player][-1]
 
 
 def handle_exit_commands(game, command):
@@ -72,8 +72,8 @@ def place_mark(coordinates, game):
   if row < 0:
     raise IndexError
   if game.board[row][column] == EMPTY:
-    game.board[row][column] = MARKS[game.player]
-    game.steps[game.player].append((column, row))
+    game.board[row][column] = MARKS[game.current_player]
+    game.steps[game.current_player].append((column, row))
   else:
     raise SpotTakenError
 
