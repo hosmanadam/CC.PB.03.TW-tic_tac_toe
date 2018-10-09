@@ -45,6 +45,25 @@ def game_undo(game):
     del game.steps[game.player][-1]
 
 
+def handle_exit_commands(game, command):
+  """Searches input string for `'u'`, `'s'`, `'q'`.
+  If found, calls corresponding function and returns `True`.
+  (1) `'u'` → `game_undo()`
+  (2) `'s'` → `save()`
+  (3) `'q'` → `quit()`
+  Else, returns `None` to signal 'no exit command found'."""
+  command = command.strip().lower()
+  if command == 'u':
+    game_undo(game)
+    return True
+  elif command == 's':
+    game_save(game); sleep(WAIT/2)
+    quit()
+  elif command == 'q':
+    quit()
+  return None
+
+
 def place_mark(coordinates, game):
   """Places player's mark at passed coordinate.
   Example input coordinates: `'a4'` → `board[3][0]`"""

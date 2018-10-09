@@ -60,7 +60,7 @@ def handle_input_errors(fn):
 
 @handle_input_errors
 def get_player_names(player, retry=False):
-  """Returns value of `player` from user input.
+  """Returns name of `player` from user input.
   Example: 'Adam'`"""
   name = ''
   while not name.strip():
@@ -130,31 +130,20 @@ def print_scores(players, scores):
 
 
 def prompt_action(game, prompt=''):
-  """Asks user to input coordinates. Handles 3 input cases (plus errors):
-  (1) `'u'` → `game_undo()`
-  (2) `'s'` → `save()`
-  (3) `'q'` → `quit()`
-  (4) coordinates → `place_mark()`"""
-  try:
-    action = input(prompt)
-    if action.lower() == 'u':
-      f3.game_undo(game)
-    elif action.lower() == 's':
-      f3.game_save(game); sleep(WAIT/2)
-      f3.quit()
-    elif action.lower() == 'q':
-      f3.quit()
-    else:
-      row = int(action[1:])-1
-      column = COLUMNS.index(action[0].upper())
+  """Asks user to input coordinates, then uses `place_mark()` to mark that spot."""
+  command = input(prompt)
+  if not f3.handle_exit_commands(game, command):
+    try:
+      row = int(command[1:])-1
+      column = COLUMNS.index(command[0].upper())
       coordinates = (column, row)
       f3.place_mark(coordinates, game)
-  except IndexError:
-    prompt_action(game, prompt="Coordinates out of range. Try again: ")
-  except ValueError:
-    prompt_action(game, prompt="Incorrectly formatted coordinates. Try again: ")
-  except SpotTakenError:
-    prompt_action(game, prompt="That spot is already taken. Try again: ")
+    except IndexError:
+      prompt_action(game, prompt="Coordinates out of range. Try again: ")
+    except ValueError:
+      prompt_action(game, prompt="Incorrectly formatted coordinates. Try again: ")
+    except SpotTakenError:
+      prompt_action(game, prompt="That spot is already taken. Try again: ")
 
 
 def welcome_start(loaded_now):
