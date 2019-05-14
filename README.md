@@ -1,8 +1,7 @@
 # Tic-tac-toe v2.0 by 2heads
 
 ## Welcome...
-To our study project aimed at learning Python and programming fundamentals.
-This is a console tic-tac-toe game with dynamic board & winning row sizes, save functionality and more.
+To our study project aimed at learning Python and programming fundamentals: a console tic-tac-toe game with dynamic board & winning row sizes, save functionality and more.  
 To run: `$ python3 tic_tac_toe.py`
 
 ## Standards
