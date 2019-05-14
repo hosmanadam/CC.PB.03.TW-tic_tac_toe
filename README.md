@@ -1,8 +1,9 @@
 # Tic-tac-toe v2.0 by 2heads
 
 ## Welcome...
-To our little study project, now 2 weeks in development at Codecool Budapest.
-Here's some info about the code to aid everyone (including us) in not messing it up.
+To our study project aimed at learning Python and programming fundamentals.
+This is a console tic-tac-toe game with dynamic board & winning row sizes, save functionality and more.
+To run: `$ python3 tic_tac_toe.py`
 
 ## Standards
 
@@ -27,9 +28,3 @@ In other words, functions in the same file/module may **not** call each other, o
 
 A funcion may call functions more than 1 level below it.
 In this case, when the lower function has siblings (ones that are very similar in functionality, e.g. `game_load` and `game_save`), they all go to the lower level.
-
-### Function order
-Function definitions are listed alphabetically.
-
-### Tagging
-...
