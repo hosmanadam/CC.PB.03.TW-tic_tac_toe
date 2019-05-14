@@ -2,7 +2,10 @@
 
 ## Welcome...
 To our study project aimed at learning Python and programming fundamentals: a console tic-tac-toe game with dynamic board & winning row sizes, save functionality and more.  
-To run: `$ python3 tic_tac_toe.py`
+
+## To run
+`python3 -m pip install termcolor`
+`$ python3 tic_tac_toe.py`
 
 ## Standards
 
